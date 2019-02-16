@@ -6,6 +6,7 @@ from voikko import libvoikko
 from .preprocess import load_UD, source_type_percentages
 from .models.tfidf import TfidfVectors
 from .models.pooled_word2vec import PooledWord2Vec
+from .models.pooled_fasttext import PooledFastText
 
 
 def main():
@@ -22,7 +23,8 @@ def main():
 
     models = [
         TfidfVectors(voikko),
-        PooledWord2Vec('data/fin-word2vec/fin-word2vec.bin')
+        PooledWord2Vec('data/fin-word2vec/fin-word2vec.bin'),
+        PooledFastText('data/fasttext-fi/cc.fi.300.bin'),
     ]
 
     scores = []
@@ -44,6 +46,7 @@ def main():
     print('F1 score summary:')
     print(pd.DataFrame(scores).to_string(index=False, header=False,
                                          float_format=two_decimals))
+
 
 def train_classifier(X, y):
     clf = LogisticRegression(multi_class='multinomial',
