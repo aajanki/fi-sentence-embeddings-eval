@@ -5,6 +5,8 @@ name = "pypi"
 
 [packages]
 pandas = "*"
+scikit-learn = "==0.20"
+voikko = "*"
 
 [dev-packages]
 
