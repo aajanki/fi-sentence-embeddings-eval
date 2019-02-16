@@ -20,7 +20,7 @@ def load_UD(datadir):
     df_train = pd.concat((
         parse_conllu(open(train_filename)),
         parse_conllu(open(dev_filename))
-    ))
+    )).reset_index()
     df_train = df_train[df_train['source_type'].isin(selected_sources)]
     df_test = parse_conllu(open(test_filename))
     df_test = df_test[df_test['source_type'].isin(selected_sources)]
