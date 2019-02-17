@@ -1,3 +1,4 @@
+import argparse
 import re
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
@@ -12,8 +13,9 @@ from .models.bert import Bert
 
 def main():
     voikko = libvoikko.Voikko('fi')
+    args = parse_args()
     
-    df_train, df_test = load_UD('data/UD_Finnish-TDT')
+    df_train, df_test = load_UD('data/UD_Finnish-TDT', args.dev_set)
 
     print(f'{df_train.shape[0]} train samples')
     print(f'{df_test.shape[0]} test samples')
@@ -85,6 +87,13 @@ def zero_decimals(x):
 
 def two_decimals(x):
     return f'{x:.2f}'
+
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--dev-set', action='store_true',
+                    help='Evaluate on the development set')
+    return parser.parse_args()
 
 
 if __name__ == '__main__':

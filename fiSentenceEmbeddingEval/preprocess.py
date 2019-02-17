@@ -10,18 +10,18 @@ def print_source_percentages():
     print(source_type_percentages(df_train, df_test))
 
 
-def load_UD(datadir):
+def load_UD(datadir, return_dev_set=False):
     train_filename = os.path.join(datadir, 'fi_tdt-ud-train.conllu')
-    dev_filename = os.path.join(datadir, 'fi_tdt-ud-dev.conllu')
-    test_filename = os.path.join(datadir, 'fi_tdt-ud-test.conllu')
+    if return_dev_set:
+        test_filename = os.path.join(datadir, 'fi_tdt-ud-dev.conllu')
+    else:
+        test_filename = os.path.join(datadir, 'fi_tdt-ud-test.conllu')
 
     selected_sources = ('b', 'e', 'j', 's', 't', 'u', 'w', 'wn')
 
-    df_train = pd.concat((
-        parse_conllu(open(train_filename)),
-        parse_conllu(open(dev_filename))
-    )).reset_index()
+    df_train = parse_conllu(open(train_filename))
     df_train = df_train[df_train['source_type'].isin(selected_sources)]
+
     df_test = parse_conllu(open(test_filename))
     df_test = df_test[df_test['source_type'].isin(selected_sources)]
 
