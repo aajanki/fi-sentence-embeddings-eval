@@ -1,8 +1,14 @@
 import argparse
 import re
 import pandas as pd
-from sklearn.linear_model import LogisticRegression
+import numpy as np
+from keras.layers import Dense, Dropout
+from keras.models import Sequential
+from keras.wrappers.scikit_learn import KerasClassifier
+from scipy import sparse
 from sklearn.metrics import f1_score, classification_report, confusion_matrix
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
 from voikko import libvoikko
 from .preprocess import load_UD, source_type_percentages
 from .models.tfidf import TfidfVectors
@@ -53,11 +59,33 @@ def main():
 
 
 def train_classifier(X, y):
-    clf = LogisticRegression(multi_class='multinomial',
-                             solver='lbfgs',
-                             max_iter=1000)
-    clf.fit(X, y)
-    return clf
+    scaler = StandardScaler(with_mean=not sparse.issparse(X))
+    clf = KerasClassifier(build_fn=classifier_model,
+                          input_dim=X.shape[1],
+                          num_classes=len(np.unique(y)),
+                          epochs=200,
+                          batch_size=8,
+                          verbose=0)
+    pipeline = Pipeline([
+        ('scaler', scaler),
+        ('classifier', clf)
+    ])
+    pipeline.fit(X, y)
+    return pipeline
+
+
+def classifier_model(input_dim=300, num_classes=3):
+    model = Sequential()
+    model.add(Dropout(0.3, input_shape=(input_dim, )))
+    model.add(Dense(128, activation='tanh'))
+    model.add(Dropout(0.3))
+    model.add(Dense(32, activation='tanh'))
+    model.add(Dropout(0.3))
+    model.add(Dense(num_classes, activation='softmax'))
+    model.compile(loss='categorical_crossentropy',
+                  optimizer='adam',
+                  metrics=['accuracy'])
+    return model
 
 
 def evaluate(clf, X_test, y_test):

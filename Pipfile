@@ -11,6 +11,7 @@ numpy = "*"
 gensim = "==3.7.*"
 bert-tensorflow = "*"
 tensorflow = "*"
+keras = "*"
 
 [dev-packages]
 
