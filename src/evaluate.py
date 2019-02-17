@@ -24,9 +24,9 @@ def main():
 
     models = [
         TfidfVectors(voikko),
-        PooledWord2Vec('data/fin-word2vec/fin-word2vec.bin'),
-        PooledFastText('data/fasttext-fi/cc.fi.300.bin'),
-        Bert('data/bert/multi_cased_L-12_H-768_A-12', 1),
+        PooledWord2Vec('pretrained/fin-word2vec/fin-word2vec.bin'),
+        PooledFastText('pretrained/fasttext-fi/cc.fi.300.bin'),
+        Bert('pretrained/bert/multi_cased_L-12_H-768_A-12', 1),
     ]
 
     scores = []
