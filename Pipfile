@@ -9,6 +9,8 @@ scikit-learn = "==0.20.*"
 voikko = "*"
 numpy = "*"
 gensim = "==3.7.*"
+bert-tensorflow = "*"
+tensorflow = "*"
 
 [dev-packages]
 

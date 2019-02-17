@@ -7,6 +7,7 @@ from .preprocess import load_UD, source_type_percentages
 from .models.tfidf import TfidfVectors
 from .models.pooled_word2vec import PooledWord2Vec
 from .models.pooled_fasttext import PooledFastText
+from .models.bert import Bert
 
 
 def main():
@@ -25,6 +26,7 @@ def main():
         TfidfVectors(voikko),
         PooledWord2Vec('data/fin-word2vec/fin-word2vec.bin'),
         PooledFastText('data/fasttext-fi/cc.fi.300.bin'),
+        Bert('data/bert/multi_cased_L-12_H-768_A-12', 1),
     ]
 
     scores = []
