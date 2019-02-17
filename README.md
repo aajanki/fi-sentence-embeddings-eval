@@ -9,5 +9,5 @@
 ## Run
 
 ```
-pipenv run python -m src.evaluate
+pipenv run python -m fiSentenceEmbeddingEval.evaluate
 ```
