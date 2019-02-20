@@ -8,6 +8,7 @@ from keras.layers import Dense, Dropout
 from keras.models import Sequential
 from keras.wrappers.scikit_learn import KerasClassifier
 from scipy import sparse
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score, classification_report, confusion_matrix
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
@@ -48,7 +49,7 @@ def main():
         train_features, test_features = \
             sentence_embeddings(model, df_train, df_test)
 
-        clf = train_classifier(train_features, df_train['source_type'])
+        clf = train_classifier(train_features, df_train['source_type'], args.logreg)
         score = evaluate(clf, test_features, df_test['source_type'])
 
         print(f'F1 {model.name}: {score:.2f}')
@@ -63,14 +64,20 @@ def main():
     save_results(scores, args.resultdir)
 
 
-def train_classifier(X, y):
+def train_classifier(X, y, logreg):
     scaler = StandardScaler(with_mean=not sparse.issparse(X))
-    clf = KerasClassifier(build_fn=classifier_model,
-                          input_dim=X.shape[1],
-                          num_classes=len(np.unique(y)),
-                          epochs=200,
-                          batch_size=8,
-                          verbose=0)
+
+    if logreg:
+        clf = LogisticRegression(multi_class='multinomial',
+                                 solver='lbfgs',
+                                 max_iter=1000)
+    else:
+        clf = KerasClassifier(build_fn=nn_classifier_model,
+                              input_dim=X.shape[1],
+                              num_classes=len(np.unique(y)),
+                              epochs=200,
+                              batch_size=8,
+                              verbose=0)
     pipeline = Pipeline([
         ('scaler', scaler),
         ('classifier', clf)
@@ -79,7 +86,7 @@ def train_classifier(X, y):
     return pipeline
 
 
-def classifier_model(input_dim=300, num_classes=3):
+def nn_classifier_model(input_dim=300, num_classes=3):
     model = Sequential()
     model.add(Dropout(0.3, input_shape=(input_dim, )))
     model.add(Dense(128, activation='tanh'))
@@ -132,6 +139,8 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--dev-set', action='store_true',
                         help='Evaluate on the development set')
+    parser.add_argument('--logreg', action='store_true',
+                        help='Use logistic regression as the final classifier')
     parser.add_argument('--resultdir', default='results',
                         help='Name of the directory where the results will '
                         'be saved')
