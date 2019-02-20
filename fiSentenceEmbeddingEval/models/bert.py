@@ -4,7 +4,6 @@ import os
 import os.path
 import tempfile
 import bert.extract_features
-import tensorflow as tf
 
 
 class Bert:

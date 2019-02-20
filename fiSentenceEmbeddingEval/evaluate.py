@@ -1,5 +1,4 @@
 import argparse
-import re
 import os
 import os.path
 import pandas as pd
