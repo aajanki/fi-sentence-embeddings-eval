@@ -25,13 +25,7 @@ def main():
     args = parse_args()
     
     df_train, df_test = load_UD('data/UD_Finnish-TDT', args.dev_set)
-
-    print(f'{df_train.shape[0]} train samples')
-    print(f'{df_test.shape[0]} test samples')
-    print(f"{len(df_train['source_type'].unique())} classes")
-    print('Class proportions:')
-    print(source_type_percentages(df_train, df_test).to_string(
-        float_format=zero_decimals))
+    print_data_summary(df_train, df_test)
 
     models = [
         TfidfVectors(voikko),
@@ -41,6 +35,30 @@ def main():
     ]
 
     scores = []
+    for k in range(args.num_trials):
+        if args.num_trials > 1:
+            print(f'Trial {k+1}/{args.num_trials}')
+
+        scores.append(evaluate_models(models, df_train, df_test, args.logreg))
+    scores = pd.concat(scores).groupby('model').mean()
+
+    print('F1 score summary:')
+    print(scores.to_string(float_format=two_decimals))
+
+    save_results(scores, args.resultdir)
+
+
+def print_data_summary(df_train, df_test):
+    print(f'{df_train.shape[0]} train samples')
+    print(f'{df_test.shape[0]} test samples')
+    print(f"{len(df_train['source_type'].unique())} classes")
+    print('Class proportions:')
+    print(source_type_percentages(df_train, df_test).to_string(
+        float_format=zero_decimals))
+
+
+def evaluate_models(models, df_train, df_test, logreg):
+    scores = []
     for model in models:
         print()
         print(f'*** {model.name} ***')
@@ -49,19 +67,14 @@ def main():
         train_features, test_features = \
             sentence_embeddings(model, df_train, df_test)
 
-        clf = train_classifier(train_features, df_train['source_type'], args.logreg)
+        clf = train_classifier(train_features, df_train['source_type'], logreg)
         score = evaluate(clf, test_features, df_test['source_type'])
 
         print(f'F1 {model.name}: {score:.2f}')
 
         scores.append((model.name, score))
-    scores = pd.DataFrame(scores)
 
-    print('F1 score summary:')
-    print(scores.to_string(index=False, header=False,
-                           float_format=two_decimals))
-
-    save_results(scores, args.resultdir)
+    return pd.DataFrame(scores, columns=['model', 'score'])
 
 
 def train_classifier(X, y, logreg):
@@ -124,7 +137,7 @@ def sentence_embeddings(embeddings_model, df_train, df_test):
 def save_results(scores, resultdir):
     os.makedirs(resultdir, exist_ok=True)
     filename = os.path.join(resultdir, 'scores.csv')
-    scores.to_csv(filename, index=False, header=False)
+    scores.to_csv(filename)
 
 
 def zero_decimals(x):
@@ -137,6 +150,10 @@ def two_decimals(x):
 
 def parse_args():
     parser = argparse.ArgumentParser()
+    parser.add_argument('--num-trials', type=int, default=1,
+                        help='Number of times the training is repeated on '
+                        'random intialization. The final scores are '
+                        'averages of the trials')
     parser.add_argument('--dev-set', action='store_true',
                         help='Evaluate on the development set')
     parser.add_argument('--logreg', action='store_true',
