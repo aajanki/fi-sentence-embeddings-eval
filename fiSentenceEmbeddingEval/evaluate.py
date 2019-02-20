@@ -1,5 +1,7 @@
 import argparse
 import re
+import os
+import os.path
 import pandas as pd
 import numpy as np
 from keras.layers import Dense, Dropout
@@ -52,10 +54,13 @@ def main():
         print(f'F1 {model.name}: {score:.2f}')
 
         scores.append((model.name, score))
+    scores = pd.DataFrame(scores)
 
     print('F1 score summary:')
-    print(pd.DataFrame(scores).to_string(index=False, header=False,
-                                         float_format=two_decimals))
+    print(scores.to_string(index=False, header=False,
+                           float_format=two_decimals))
+
+    save_results(scores, args.resultdir)
 
 
 def train_classifier(X, y):
@@ -109,6 +114,12 @@ def sentence_embeddings(embeddings_model, df_train, df_test):
     return features_train, features_test
 
 
+def save_results(scores, resultdir):
+    os.makedirs(resultdir, exist_ok=True)
+    filename = os.path.join(resultdir, 'scores.csv')
+    scores.to_csv(filename, index=False, header=False)
+
+
 def zero_decimals(x):
     return f'{x:.0f}'
 
@@ -120,7 +131,10 @@ def two_decimals(x):
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--dev-set', action='store_true',
-                    help='Evaluate on the development set')
+                        help='Evaluate on the development set')
+    parser.add_argument('--resultdir', default='results',
+                        help='Name of the directory where the results will '
+                        'be saved')
     return parser.parse_args()
 
 
