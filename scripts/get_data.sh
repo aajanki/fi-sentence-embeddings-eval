@@ -5,6 +5,11 @@
 mkdir -p data/fin-word2vec
 wget -P data/fin-word2vec/ http://bionlp-www.utu.fi/fin-vector-space-models/fin-word2vec.bin
 
+# Word frequencies on Finnish Internet Parseback
+# https://turkunlp.org/finnish_nlp.html
+mkdir -p data/finnish_vocab
+wget -P data/finnish_vocab/ http://bionlp-www.utu.fi/.jmnybl/finnish_vocab.txt.gz
+
 # FastText Finnish model
 # https://github.com/facebookresearch/fastText/blob/master/docs/crawl-vectors.md
 mkdir -p pretrained/fasttext-fi

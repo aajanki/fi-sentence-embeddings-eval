@@ -20,10 +20,10 @@ def load_UD(datadir, return_dev_set=False):
     selected_sources = ('b', 'e', 'j', 's', 't', 'u', 'w', 'wn')
 
     df_train = parse_conllu(open(train_filename))
-    df_train = df_train[df_train['source_type'].isin(selected_sources)]
+    df_train = df_train[df_train['source_type'].isin(selected_sources)].reset_index()
 
     df_test = parse_conllu(open(test_filename))
-    df_test = df_test[df_test['source_type'].isin(selected_sources)]
+    df_test = df_test[df_test['source_type'].isin(selected_sources)].reset_index()
 
     return (df_train, df_test)
 

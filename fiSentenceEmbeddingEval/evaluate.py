@@ -13,10 +13,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from voikko import libvoikko
 from .preprocess import load_UD, source_type_percentages
-from .models.tfidf import TfidfVectors
-from .models.pooled_word2vec import PooledWord2Vec
-from .models.pooled_fasttext import PooledFastText
-from .models.bert import Bert
+from .models import *
 
 
 def main():
@@ -28,6 +25,8 @@ def main():
 
     models = [
         TfidfVectors(voikko),
+        SIF('data/finnish_vocab/finnish_vocab.txt.gz',
+            'pretrained/fin-word2vec/fin-word2vec.bin'),
         PooledWord2Vec('pretrained/fin-word2vec/fin-word2vec.bin'),
         PooledFastText('pretrained/fasttext-fi/cc.fi.300.bin'),
         Bert('pretrained/bert/multi_cased_L-12_H-768_A-12', 1),

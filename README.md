@@ -31,6 +31,7 @@ Models included in the comparison:
 * Average-pooled [word2vec](https://en.wikipedia.org/wiki/Word2vec) trained on the [Finnish Internet Parsebank](http://bionlp.utu.fi/finnish-internet-parsebank.html)
 * Average-pooled multilingual [FastText](https://github.com/facebookresearch/fastText/blob/master/docs/crawl-vectors.md)
 * Multilingual [BERT](https://github.com/google-research/bert/blob/master/multilingual.md)
+* [Smoothed Inverse Frequency weighting](https://openreview.net/forum?id=SyK00v5xx) of word embeddings
 
 ## Download datasets and pre-trained models
 
