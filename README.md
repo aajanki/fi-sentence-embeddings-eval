@@ -32,6 +32,7 @@ Models included in the comparison:
 * Average-pooled multilingual [FastText](https://github.com/facebookresearch/fastText/blob/master/docs/crawl-vectors.md)
 * Multilingual [BERT](https://github.com/google-research/bert/blob/master/multilingual.md)
 * [Smoothed Inverse Frequency weighting](https://openreview.net/forum?id=SyK00v5xx) of word embeddings
+* [Bag of embedding projections](https://openreview.net/forum?id=BkgPajAcY7)
 
 ## Download datasets and pre-trained models
 

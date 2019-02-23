@@ -25,10 +25,11 @@ def main():
 
     models = [
         TfidfVectors(voikko),
-        SIF('data/finnish_vocab/finnish_vocab.txt.gz',
-            'pretrained/fin-word2vec/fin-word2vec.bin'),
         PooledWord2Vec('pretrained/fin-word2vec/fin-word2vec.bin'),
         PooledFastText('pretrained/fasttext-fi/cc.fi.300.bin'),
+        SIF('data/finnish_vocab/finnish_vocab.txt.gz',
+            'pretrained/fin-word2vec/fin-word2vec.bin'),
+        BOREP('pretrained/fin-word2vec/fin-word2vec.bin', 4096),
         Bert('pretrained/bert/multi_cased_L-12_H-768_A-12', 1),
     ]
 
