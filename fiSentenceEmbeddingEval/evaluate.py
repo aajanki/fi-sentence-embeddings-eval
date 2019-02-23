@@ -39,7 +39,7 @@ def main():
             print(f'Trial {k+1}/{args.num_trials}')
 
         scores.append(evaluate_models(models, df_train, df_test, args.logreg))
-    scores = pd.concat(scores).groupby('model').mean()
+    scores = pd.concat(scores).groupby('model').agg([np.mean, np.std])
 
     print('F1 score summary:')
     print(scores.to_string(float_format=two_decimals))

@@ -11,7 +11,6 @@ class BOREP(PooledWord2Vec):
 
     John Wieting, Douwe Kiela: No Training Required: Exploring Random
     Encoders for Sentence Classification, ICLR 2019
-
     """
     def __init__(self, word2vec_filename, projection_dim):
         super().__init__(word2vec_filename)
@@ -19,6 +18,9 @@ class BOREP(PooledWord2Vec):
         self.name = 'BOREP'
         input_dim = self.model.vector_size
         self.W = self.generate_projection(input_dim, projection_dim)
+
+    def fit(self, sentences):
+        self.W = self.generate_projection(self.W.shape[1], self.W.shape[0])
 
     def generate_projection(self, input_dim, projection_dim):
         a = 1.0/np.sqrt(input_dim)
