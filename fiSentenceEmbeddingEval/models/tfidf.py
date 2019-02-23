@@ -1,10 +1,11 @@
 import re
 from sklearn.feature_extraction.text import TfidfVectorizer
+from .sentenceembedding import SentenceEmbeddingModel
 
 
-class TfidfVectors:
-    def __init__(self, voikko):
-        self.name = 'TF-IDF'
+class TfidfVectors(SentenceEmbeddingModel):
+    def __init__(self, name, voikko):
+        super().__init__(name)
         tokenizer = self.build_voikko_tokenizer(voikko)
         self.vectorizer = TfidfVectorizer(lowercase=True,
                                           tokenizer=tokenizer,

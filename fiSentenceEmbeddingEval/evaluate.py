@@ -24,13 +24,18 @@ def main():
     print_data_summary(df_train, df_test)
 
     models = [
-        TfidfVectors(voikko),
-        PooledWord2Vec('pretrained/fin-word2vec/fin-word2vec.bin'),
-        PooledFastText('pretrained/fasttext-fi/cc.fi.300.bin'),
-        SIF('data/finnish_vocab/finnish_vocab.txt.gz',
+        TfidfVectors('TF-IDF', voikko),
+        PooledWord2Vec('Pooled word2vec',
+                       'pretrained/fin-word2vec/fin-word2vec.bin'),
+        PooledFastText('Pooled FastText',
+                       'pretrained/fasttext-fi/cc.fi.300.bin'),
+        SIF('SIF',
+            'data/finnish_vocab/finnish_vocab.txt.gz',
             'pretrained/fin-word2vec/fin-word2vec.bin'),
-        BOREP('pretrained/fin-word2vec/fin-word2vec.bin', 4096),
-        Bert('pretrained/bert/multi_cased_L-12_H-768_A-12', 1),
+        BOREP('BOREP',
+              'pretrained/fin-word2vec/fin-word2vec.bin', 4096),
+        Bert('Bert multilingual',
+             'pretrained/bert/multi_cased_L-12_H-768_A-12', 1),
     ]
 
     scores = []

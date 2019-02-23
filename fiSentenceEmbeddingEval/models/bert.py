@@ -4,9 +4,10 @@ import os
 import os.path
 import tempfile
 import bert.extract_features
+from .sentenceembedding import SentenceEmbeddingModel
 
 
-class Bert:
+class Bert(SentenceEmbeddingModel):
     """BERT sentence embeddings
 
     Computes a sentence embedding vector as the average of last few
@@ -15,18 +16,14 @@ class Bert:
     Uses a pre-trained BERT model.
     """
 
-    def __init__(self, path, num_layers=1):
-        self.name = 'Bert multilingual'
+    def __init__(self, name, path, num_layers=1):
+        super().__init__(name)
         self.path = path
         self.num_layers = num_layers
 
         config = json.load(open(os.path.join(self.path, 'bert_config.json')))
         self.vocab_size = config.get('vocab_size')
         self.embedding_dim = config.get('pooler_fc_size')
-
-    def fit(self, sentences):
-        # nothing to do
-        pass
 
     def describe(self):
         return '\n'.join([

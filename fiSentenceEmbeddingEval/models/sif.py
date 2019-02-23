@@ -12,10 +12,9 @@ class SIF(PooledWord2Vec):
     Tough-to-Beat Baseline for Sentence Embeddings, ICLR 2017
     """
 
-    def __init__(self, word_freq_filename, word2vec_filename, a=5e-4):
-        super().__init__(word2vec_filename)
+    def __init__(self, name, word_freq_filename, word2vec_filename, a=5e-4):
+        super().__init__(name, word2vec_filename)
 
-        self.name = 'SIF'
         self.p = self.load_unigram_probabilities(word_freq_filename)
         self.a = a
         self.pc = None
