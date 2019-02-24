@@ -12,8 +12,12 @@ gensim = "==3.7.*"
 bert-tensorflow = "*"
 tensorflow = "*"
 keras = "*"
+matplotlib = "*"
+seaborn = "*"
 
 [dev-packages]
+matplotlib = "*"
+seaborn = "*"
 
 [requires]
 python_version = "3.7"
