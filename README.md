@@ -43,5 +43,5 @@ Models included in the comparison:
 ## Run
 
 ```
-pipenv run python -m fiSentenceEmbeddingEval.evaluate
+pipenv run scripts/run.sh
 ```

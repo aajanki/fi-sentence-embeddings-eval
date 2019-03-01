@@ -44,7 +44,9 @@ def main():
             print(f'Trial {k+1}/{args.num_trials}')
 
         scores.append(evaluate_models(models, tasks))
-    scores = pd.concat(scores).groupby(['task', 'model']).agg([np.mean, np.std])
+    scores = (pd.concat(scores)
+              .groupby(['task', 'score_label', 'model'])
+              .agg([np.mean, np.std]))
 
     print('F1 score summary:')
     print(scores.to_string(float_format=two_decimals))
@@ -64,6 +66,7 @@ def evaluate_models(models, tasks):
 
             scores.append({
                 'task': task.name,
+                'score_label': task.score_label,
                 'model': model.name,
                 'score': score
             })
@@ -74,7 +77,10 @@ def evaluate_models(models, tasks):
 def save_results(scores, resultdir):
     os.makedirs(resultdir, exist_ok=True)
     filename = os.path.join(resultdir, 'scores.csv')
-    scores.to_csv(filename)
+    flattened = scores.reset_index()
+    flattened.columns = ['_'.join(x).rstrip('_')
+                         for x in flattened.columns.values]
+    flattened.to_csv(filename, index=False)
 
 
 def two_decimals(x):

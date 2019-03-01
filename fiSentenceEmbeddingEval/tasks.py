@@ -32,6 +32,7 @@ class TDTCategoryClassificationTask:
     def __init__(self, name, datadir, use_dev_set=False, use_log_reg=False,
                  verbose=False):
         self.name = name
+        self.score_label = 'F1 score'
         self.use_log_reg = use_log_reg
         self.verbose = verbose
         self.df_train, self.df_test = load_UD(datadir, use_dev_set)
@@ -132,6 +133,7 @@ class OpusparcusTask:
     def __init__(self, name, datadir, num_sample=10000, use_dev_set=False,
                  verbose=False):
         self.name = name
+        self.score_label = "Pearson's coefficient"
         self.verbose = verbose
 
         train_filename = os.path.join(datadir, 'fi/train/fi-train.txt.bz2')
