@@ -15,7 +15,7 @@ def main():
     tasks = [
         TDTCategoryClassificationTask('TDT categories', 'data/UD_Finnish-TDT',
                                     use_dev_set=args.dev_set,
-                                    use_log_reg=args.logreg,
+                                    use_log_reg=args.fast,
                                     verbose=args.verbose),
         OpusparcusTask('Opusparcus', 'data/opusparcus/opusparcus_v1',
                       use_dev_set=args.dev_set, verbose=args.verbose),
@@ -98,8 +98,9 @@ def parse_args():
                         'averages of the trials')
     parser.add_argument('--dev-set', action='store_true',
                         help='Evaluate on the development set')
-    parser.add_argument('--logreg', action='store_true',
-                        help='Use logistic regression as the final classifier')
+    parser.add_argument('--fast', action='store_true',
+                        help='Use simpler final classifier. Faster but less '
+                        'accurate. Good for debugging')
     parser.add_argument('--verbose', action='store_true',
                         help='Show verbose output')
     parser.add_argument('--resultdir', default='results',
