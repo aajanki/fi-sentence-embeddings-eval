@@ -14,11 +14,14 @@ def main():
     
     tasks = [
         TDTCategoryClassificationTask('TDT categories', 'data/UD_Finnish-TDT',
-                                     use_dev_set=args.dev_set,
-                                     use_log_reg=args.logreg,
-                                     verbose=args.verbose),
+                                    use_dev_set=args.dev_set,
+                                    use_log_reg=args.logreg,
+                                    verbose=args.verbose),
         OpusparcusTask('Opusparcus', 'data/opusparcus/opusparcus_v1',
-                       use_dev_set=args.dev_set, verbose=args.verbose)
+                      use_dev_set=args.dev_set, verbose=args.verbose),
+        YlilautaConsecutiveSentencesTask('Ylilauta', 'data/ylilauta',
+                                         use_dev_set=args.dev_set,
+                                         verbose=args.verbose),
     ]
 
     models = [

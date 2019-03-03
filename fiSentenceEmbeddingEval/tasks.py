@@ -17,6 +17,32 @@ def zero_decimals(x):
     return f'{x:.0f}'
 
 
+def sentence_pair_features(embeddings, sentences1, sentences2):
+    """Compute a feature vector for a sentence pair
+
+    The vector is a concatenation of u*v and |u - v|, where u is the
+    sentence embedding for the first sentence and v for the second
+    sentence.
+
+    This technique was introduced by Kai Sheng Tai, Richard Socher,
+    Christopher D. Manning: "Improved Semantic Representations From
+    Tree-Structured Long Short-Term Memory Networks"
+    """
+    
+    embeddings1 = embeddings.transform(sentences1)
+    embeddings2 = embeddings.transform(sentences2)
+
+    if sparse.issparse(embeddings1):
+        embeddings1 = np.asarray(embeddings1.todense())
+    if sparse.issparse(embeddings2):
+        embeddings2 = np.asarray(embeddings2.todense())
+
+    return np.concatenate((
+        np.multiply(embeddings1, embeddings2),
+        np.abs(embeddings1 - embeddings2)
+    ), axis=1)
+
+
 class TDTCategoryClassificationTask:
     """Category classification
 
@@ -113,6 +139,7 @@ class TDTCategoryClassificationTask:
         print('Class proportions:')
         print(source_type_percentages(df_train, df_test).to_string(
             float_format=zero_decimals))
+        print()
 
 
 class OpusparcusTask:
@@ -145,12 +172,16 @@ class OpusparcusTask:
             test_filename = os.path.join(datadir, 'fi/test/fi-test.txt')
         self.df_test = self.load_test_data(test_filename)
 
-        print(name)
-        print(f'{self.df_train.shape[0]} train samples')
-        print(f'{self.df_test.shape[0]} test samples')
+        self.print_data_summary(self.df_train, self.df_test)
 
     def evaluate(self, embeddings):
-        X = self.construct_features(embeddings, self.df_train)
+        all_sentences = (self.df_train['sentence1']
+                         .append(self.df_train['sentence2']))
+        embeddings.fit(all_sentences)
+
+        X = sentence_pair_features(embeddings,
+                                   self.df_train['sentence1'],
+                                   self.df_train['sentence2'])
         y = self.train_class_probabilities(self.df_train)
 
         clf = KerasClassifier(self.build_classifier,
@@ -161,7 +192,9 @@ class OpusparcusTask:
                               verbose=1 if self.verbose else 0)
         clf.fit(X, y)
 
-        X_test = self.construct_features(embeddings, self.df_test)
+        X_test = sentence_pair_features(embeddings,
+                                        self.df_test['sentence1'],
+                                        self.df_test['sentence2'])
         y_test = self.df_test['score']
         y_proba = clf.predict_proba(X_test)
         y_pred = y_proba.dot(np.arange(1, 6))
@@ -241,3 +274,90 @@ class OpusparcusTask:
     def load_test_data(self, filename):
         names = ['id', 'sentence1', 'sentence2', 'score']
         return pd.read_csv(filename, sep='\t', header=None, names=names)
+
+    def print_data_summary(self, df_train, df_test):
+        print(self.name)
+        print(f'{df_train.shape[0]} train samples')
+        print(f'{df_test.shape[0]} test samples')
+        print()
+
+
+class YlilautaConsecutiveSentencesTask:
+    """Predict if two sentence were originally consecutive or not
+
+    The data is messages from the discussion forum Ylilauta.
+
+    Data reference: http://urn.fi/urn:nbn:fi:lb-2016101210
+    """
+
+    def __init__(self, name, datadir, use_dev_set=False, verbose=False):
+        self.name = name
+        self.score_label = 'Accuracy'
+        self.verbose = verbose
+
+        train_filename = os.path.join(datadir, 'train.tab')
+        self.df_train = self.load_data(train_filename)
+
+        if use_dev_set:
+            test_filename = os.path.join(datadir, 'dev.tab')
+        else:
+            test_filename = os.path.join(datadir, 'test.tab')
+        self.df_test = self.load_data(test_filename)
+
+        self.print_data_summary(self.df_train, self.df_test)
+
+    def evaluate(self, embeddings):
+        all_sentences = (self.df_train['sentence1']
+                         .append(self.df_train['sentence2']))
+        embeddings.fit(all_sentences)
+
+        X = sentence_pair_features(embeddings,
+                                   self.df_train['sentence1'],
+                                   self.df_train['sentence2'])
+        y = (self.df_train['label'] == 1).astype(int)
+
+        clf = KerasClassifier(self.build_classifier,
+                              input_dim=X.shape[1],
+                              epochs=200,
+                              batch_size=8,
+                              verbose=1 if self.verbose else 0)
+        clf.fit(X, y)
+
+        X_test = sentence_pair_features(embeddings,
+                                        self.df_test['sentence1'],
+                                        self.df_test['sentence2'])
+        y_test = (self.df_test['label'] == 1).astype(int)
+        y_pred = clf.predict(X_test).squeeze()
+        test_acc = np.mean(y_test == y_pred)
+
+        print(f'Accuracy: {test_acc:.2f}')
+
+        return test_acc
+
+    def build_classifier(self, input_dim):
+        reg = 1e-5
+        model = Sequential()
+        model.add(Dense(64,
+                        activation='sigmoid',
+                        kernel_regularizer=regularizers.l2(reg),
+                        bias_regularizer=regularizers.l2(reg),
+                        input_shape=(input_dim, )))
+        model.add(Dense(1,
+                        activation='sigmoid',
+                        kernel_regularizer=regularizers.l2(reg),
+                        bias_regularizer=regularizers.l2(reg)))
+        model.compile(loss='binary_crossentropy', optimizer='adam',
+                      metrics=['accuracy'])
+        if self.verbose:
+            print(model.summary())
+
+        return model
+
+    def load_data(self, filename):
+        return pd.read_csv(filename, sep='\t', header=0)
+
+    def print_data_summary(self, df_train, df_test):
+        print(self.name)
+        print(f'{df_train.shape[0]} train samples')
+        print(f'{df_test.shape[0]} test samples')
+        print()

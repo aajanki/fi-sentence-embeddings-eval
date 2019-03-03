@@ -16,10 +16,16 @@ class PooledFastText(SentenceEmbeddingModel):
         ])
 
     def embedding(self, sentence):
-        # FastText will generate embeddings even for out-of-vocabulary
-        # words, therefore there is no need to handle them separately
-        vecs = [self.model.wv[w] for w in self.tokenize(sentence)]
+        vecs = [self.word_embedding(w) for w in self.tokenize(sentence)]
         if len(vecs) > 0:
             return np.mean(vecs, axis=0)
         else:
+            return np.zeros(self.model.vector_size)
+
+    def word_embedding(self, word):
+        try:
+            return self.model.wv[word]
+        except KeyError:
+            # We end up here if no ngrams are present in the FastText
+            # model
             return np.zeros(self.model.vector_size)
