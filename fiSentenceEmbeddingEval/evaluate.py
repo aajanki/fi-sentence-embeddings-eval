@@ -35,7 +35,7 @@ def main():
             'pretrained/fin-word2vec/fin-word2vec.bin'),
         BOREP('BOREP',
               'pretrained/fin-word2vec/fin-word2vec.bin', 4096),
-        Bert('Bert multilingual',
+        Bert('BERT multilingual',
              'pretrained/bert/multi_cased_L-12_H-768_A-12', 1),
     ]
 
