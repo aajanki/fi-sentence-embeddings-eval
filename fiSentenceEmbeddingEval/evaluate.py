@@ -11,12 +11,12 @@ from .tasks import *
 def main():
     voikko = libvoikko.Voikko('fi')
     args = parse_args()
-    
+
     tasks = [
         TDTCategoryClassificationTask('TDT categories', 'data/UD_Finnish-TDT',
-                                    use_dev_set=args.dev_set,
-                                    use_log_reg=args.fast,
-                                    verbose=args.verbose),
+                                      use_dev_set=args.dev_set,
+                                      classifier_params={'logreg': args.fast},
+                                      verbose=args.verbose),
         OpusparcusTask('Opusparcus', 'data/opusparcus/opusparcus_v1',
                       use_dev_set=args.dev_set, verbose=args.verbose),
         YlilautaConsecutiveSentencesTask('Ylilauta', 'data/ylilauta',

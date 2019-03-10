@@ -55,37 +55,48 @@ class TDTCategoryClassificationTask:
     https://universaldependencies.org/treebanks/fi_tdt/index.html
     """
 
-    def __init__(self, name, datadir, use_dev_set=False, use_log_reg=False,
-                 verbose=False):
+    def __init__(self, name, datadir, use_dev_set=False,
+                 classifier_params=None, verbose=False):
         self.name = name
         self.score_label = 'F1 score'
-        self.use_log_reg = use_log_reg
+        self.classifier_params = classifier_params or {}
         self.verbose = verbose
         self.df_train, self.df_test = load_UD(datadir, use_dev_set)
         self.print_data_summary(self.df_train, self.df_test)
 
-    def evaluate(self, embeddings):
+    def prepare_data(self, embeddings):
         X_train, X_test = \
             self.sentence_embeddings(embeddings, self.df_train, self.df_test)
 
-        clf = self.train_classifier(X_train, self.df_train['source_type'],
-                                    self.use_log_reg)
-        return self.compute_score(clf, X_test, self.df_test['source_type'])
+        y_train = self.df_train['source_type']
+        y_test = self.df_test['source_type']
 
-    def train_classifier(self, X, y, logreg):
+        return X_train, y_train, X_test, y_test
+
+    def evaluate(self, embeddings):
+        X_train, y_train, X_test, y_test = self.prepare_data(embeddings)
+        clf = self.train_classifier(X_train, y_train,
+                                    self.classifier_params)
+        return self.compute_score(clf, X_test, y_test)
+
+    def train_classifier(self, X, y, params):
         scaler = StandardScaler(with_mean=not sparse.issparse(X))
 
-        if logreg:
+        if params.get('logreg', False):
             clf = LogisticRegression(multi_class='multinomial',
                                      solver='lbfgs',
                                      max_iter=1000)
         else:
+            nnparams = params.copy()
+            if 'logreg' in nnparams:
+                del nnparams['logreg']
             clf = KerasClassifier(build_fn=self.nn_classifier_model,
                                   input_dim=X.shape[1],
                                   num_classes=len(np.unique(y)),
                                   epochs=200,
                                   batch_size=8,
-                                  verbose=1 if self.verbose else 0)
+                                  verbose=1 if self.verbose else 0,
+                                  **nnparams)
         pipeline = Pipeline([
             ('scaler', scaler),
             ('classifier', clf)
@@ -93,13 +104,15 @@ class TDTCategoryClassificationTask:
         pipeline.fit(X, y)
         return pipeline
 
-    def nn_classifier_model(self, input_dim=300, num_classes=3):
+    def nn_classifier_model(self, input_dim=300, num_classes=3,
+                            hidden_dim1=128, hidden_dim2=32,
+                            dropout_prop=0.3):
         model = Sequential()
-        model.add(Dropout(0.3, input_shape=(input_dim, )))
-        model.add(Dense(128, activation='tanh'))
-        model.add(Dropout(0.3))
-        model.add(Dense(32, activation='tanh'))
-        model.add(Dropout(0.3))
+        model.add(Dropout(dropout_prop, input_shape=(input_dim, )))
+        model.add(Dense(int(hidden_dim1), activation='tanh'))
+        model.add(Dropout(dropout_prop))
+        model.add(Dense(int(hidden_dim2), activation='tanh'))
+        model.add(Dropout(dropout_prop))
         model.add(Dense(num_classes, activation='softmax'))
         model.compile(loss='categorical_crossentropy',
                       optimizer='adam',

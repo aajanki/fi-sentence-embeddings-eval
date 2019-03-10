@@ -14,6 +14,7 @@ tensorflow = "*"
 keras = "*"
 matplotlib = "*"
 seaborn = "*"
+hyperopt = "*"
 
 [dev-packages]
 matplotlib = "*"

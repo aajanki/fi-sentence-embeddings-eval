@@ -46,6 +46,19 @@ Models included in the comparison:
 pipenv run scripts/run.sh
 ```
 
+The results are written to results/scores.{csv, png}.
+
+## Hyperparameter optimization
+
+```
+pipenv run python -m fiSentenceEmbeddingEval.tune
+```
+
+The optimal hyperparameters are written to
+results/hyperparameters.jsonl. You need to manually inject the
+parameter values into the source code in
+fiSentenceEmbeddingEval/models/*.py.
+
 ## Preliminary results
 
 The image shows performance of the models on the test sets.
