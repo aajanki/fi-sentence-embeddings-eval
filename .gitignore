@@ -3,3 +3,5 @@
 /data/finnish_vocab/
 /data/opusparcus
 /data/ylilauta/
+*.pyc
+__pycache__
