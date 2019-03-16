@@ -55,11 +55,9 @@ class TDTCategoryClassificationTask:
     https://universaldependencies.org/treebanks/fi_tdt/index.html
     """
 
-    def __init__(self, name, datadir, use_dev_set=False,
-                 classifier_params=None, verbose=False):
+    def __init__(self, name, datadir, use_dev_set=False, verbose=False):
         self.name = name
         self.score_label = 'F1 score'
-        self.classifier_params = classifier_params or {}
         self.verbose = verbose
         self.df_train, self.df_test = load_UD(datadir, use_dev_set)
         self.print_data_summary(self.df_train, self.df_test)
@@ -73,10 +71,9 @@ class TDTCategoryClassificationTask:
 
         return X_train, y_train, X_test, y_test
 
-    def evaluate(self, embeddings):
+    def evaluate(self, embeddings, hyperparameters):
         X_train, y_train, X_test, y_test = self.prepare_data(embeddings)
-        clf = self.train_classifier(X_train, y_train,
-                                    self.classifier_params)
+        clf = self.train_classifier(X_train, y_train, hyperparameters)
         return self.compute_score(clf, X_test, y_test)
 
     def train_classifier(self, X, y, params):
@@ -187,28 +184,45 @@ class OpusparcusTask:
 
         self.print_data_summary(self.df_train, self.df_test)
 
-    def evaluate(self, embeddings):
+    def prepare_data(self, embeddings):
         all_sentences = (self.df_train['sentence1']
                          .append(self.df_train['sentence2']))
         embeddings.fit(all_sentences)
 
-        X = sentence_pair_features(embeddings,
-                                   self.df_train['sentence1'],
-                                   self.df_train['sentence2'])
-        y = self.train_class_probabilities(self.df_train)
+        X_train = sentence_pair_features(embeddings,
+                                         self.df_train['sentence1'],
+                                         self.df_train['sentence2'])
+        y_train = self.train_class_probabilities(self.df_train)
+
+        X_test = sentence_pair_features(embeddings,
+                                        self.df_test['sentence1'],
+                                        self.df_test['sentence2'])
+        y_test = self.df_test['score']
+
+        return X_train, y_train, X_test, y_test
+        
+    def evaluate(self, embeddings, hyperparameters):
+        X_train, y_train, X_test, y_test = self.prepare_data(embeddings)
+        clf = self.train_classifier(X_train, y_train, hyperparameters)
+        return self.compute_score(clf, X_test, y_test)
+
+    def train_classifier(self, X, y, params):
+        nnparams = params.copy()
+        if 'logreg' in nnparams:
+            del nnparams['logreg']
 
         clf = KerasClassifier(self.build_classifier,
                               input_dim=X.shape[1],
                               num_classes=y.shape[1],
                               epochs=200,
                               batch_size=8,
-                              verbose=1 if self.verbose else 0)
+                              verbose=1 if self.verbose else 0,
+                              **nnparams)
         clf.fit(X, y)
 
-        X_test = sentence_pair_features(embeddings,
-                                        self.df_test['sentence1'],
-                                        self.df_test['sentence2'])
-        y_test = self.df_test['score']
+        return clf
+
+    def compute_score(self, clf, X_test, y_test):
         y_proba = clf.predict_proba(X_test)
         y_pred = y_proba.dot(np.arange(1, 6))
         corr = np.corrcoef(y_test, y_pred)[0, 1]
@@ -216,23 +230,6 @@ class OpusparcusTask:
         print(f'Correlation: {corr:.2f}')
         
         return corr
-
-    def construct_features(self, embeddings, df):
-        embeddings1 = embeddings.transform(df['sentence1'])
-        embeddings2 = embeddings.transform(df['sentence2'])
-
-        if sparse.issparse(embeddings1):
-            embeddings1 = np.asarray(embeddings1.todense())
-        if sparse.issparse(embeddings2):
-            embeddings2 = np.asarray(embeddings2.todense())
-
-        # u*v and |u - v| concatenated like in "Improved Semantic
-        # Representations From Tree-Structured Long Short-Term Memory
-        # Networks"
-        return np.concatenate((
-            np.multiply(embeddings1, embeddings2),
-            np.abs(embeddings1 - embeddings2)
-        ), axis=1)
 
     def train_class_probabilities(self, df):
         # Split the total_pmi variable in 5 bins. (The bin boundaries
@@ -256,18 +253,18 @@ class OpusparcusTask:
 
         return ps
 
-    def build_classifier(self, input_dim, num_classes):
-        reg = 1e-4
+    def build_classifier(self, input_dim, num_classes,
+                         hidden_dim1=64, l2reg=1e-4):
         model = Sequential()
-        model.add(Dense(64,
+        model.add(Dense(hidden_dim1,
                         activation='sigmoid',
-                        kernel_regularizer=regularizers.l2(reg),
-                        bias_regularizer=regularizers.l2(reg),
+                        kernel_regularizer=regularizers.l2(l2reg),
+                        bias_regularizer=regularizers.l2(l2reg),
                         input_shape=(input_dim, )))
         model.add(Dense(num_classes,
                         activation='softmax',
-                        kernel_regularizer=regularizers.l2(reg),
-                        bias_regularizer=regularizers.l2(reg)))
+                        kernel_regularizer=regularizers.l2(l2reg),
+                        bias_regularizer=regularizers.l2(l2reg)))
         model.compile(loss='kullback_leibler_divergence',
                       optimizer='adam')
         if self.verbose:
@@ -319,52 +316,67 @@ class YlilautaConsecutiveSentencesTask:
 
         self.print_data_summary(self.df_train, self.df_test)
 
-    def evaluate(self, embeddings):
+    def prepare_data(self, embeddings):
         all_sentences = (self.df_train['sentence1']
                          .append(self.df_train['sentence2']))
         embeddings.fit(all_sentences)
 
-        X = sentence_pair_features(embeddings,
+        X_train = sentence_pair_features(embeddings,
                                    self.df_train['sentence1'],
                                    self.df_train['sentence2'])
-        y = (self.df_train['label'] == 1).astype(int)
-
-        clf = KerasClassifier(self.build_classifier,
-                              input_dim=X.shape[1],
-                              epochs=200,
-                              batch_size=8,
-                              verbose=1 if self.verbose else 0)
-        clf.fit(X, y)
+        y_train = (self.df_train['label'] == 1).astype(int)
 
         X_test = sentence_pair_features(embeddings,
                                         self.df_test['sentence1'],
                                         self.df_test['sentence2'])
         y_test = (self.df_test['label'] == 1).astype(int)
-        y_pred = clf.predict(X_test).squeeze()
-        test_acc = np.mean(y_test == y_pred)
 
-        print(f'Accuracy: {test_acc:.2f}')
+        return X_train, y_train, X_test, y_test
+        
+    def evaluate(self, embeddings, hyperparameters):
+        X_train, y_train, X_test, y_test = self.prepare_data(embeddings)
+        clf = self.train_classifier(X_train, y_train, hyperparameters)
+        return self.compute_score(clf, X_test, y_test)
 
-        return test_acc
+    def train_classifier(self, X, y, params):
+        nnparams = params.copy()
+        if 'logreg' in nnparams:
+            del nnparams['logreg']
 
-    def build_classifier(self, input_dim):
-        reg = 1e-5
+        clf = KerasClassifier(self.build_classifier,
+                              input_dim=X.shape[1],
+                              epochs=200,
+                              batch_size=8,
+                              verbose=1 if self.verbose else 0,
+                              **nnparams)
+        clf.fit(X, y)
+        return clf
+
+    def build_classifier(self, input_dim, hidden_dim1=64, l2reg=1e-5):
         model = Sequential()
-        model.add(Dense(64,
+        model.add(Dense(hidden_dim1,
                         activation='sigmoid',
-                        kernel_regularizer=regularizers.l2(reg),
-                        bias_regularizer=regularizers.l2(reg),
+                        kernel_regularizer=regularizers.l2(l2reg),
+                        bias_regularizer=regularizers.l2(l2reg),
                         input_shape=(input_dim, )))
         model.add(Dense(1,
                         activation='sigmoid',
-                        kernel_regularizer=regularizers.l2(reg),
-                        bias_regularizer=regularizers.l2(reg)))
+                        kernel_regularizer=regularizers.l2(l2reg),
+                        bias_regularizer=regularizers.l2(l2reg)))
         model.compile(loss='binary_crossentropy', optimizer='adam',
                       metrics=['accuracy'])
         if self.verbose:
             print(model.summary())
 
         return model
+
+    def compute_score(self, clf, X_test, y_test):
+        y_pred = clf.predict(X_test).squeeze()
+        test_acc = np.mean(y_test == y_pred)
+
+        print(f'Accuracy: {test_acc:.2f}')
+
+        return test_acc
 
     def load_data(self, filename):
         return pd.read_csv(filename, sep='\t', header=0)

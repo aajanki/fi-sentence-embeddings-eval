@@ -1,4 +1,5 @@
 import argparse
+import json
 import os
 import os.path
 import pandas as pd
@@ -8,14 +9,30 @@ from .models import *
 from .tasks import *
 
 
+class Hyperparameters:
+    def __init__(self, filename):
+        if filename:
+            self.hyperparameters = json.load(open(filename, 'r'))
+        else:
+            self.hyperparameters = {}
+
+    def set_logreg(self):
+        self.hyperparameters['logreg'] = True
+
+    def get(self, task_name, model_name):
+        return self.hyperparameters.get(task_name, {}).get(model_name, {})
+
+
 def main():
     voikko = libvoikko.Voikko('fi')
     args = parse_args()
+    hyperparameters = Hyperparameters(args.hyperparameters)
+    if args.fast:
+        hyperparameters.set_logreg()
 
     tasks = [
         TDTCategoryClassificationTask('TDT categories', 'data/UD_Finnish-TDT',
                                       use_dev_set=args.dev_set,
-                                      classifier_params={'logreg': args.fast},
                                       verbose=args.verbose),
         OpusparcusTask('Opusparcus', 'data/opusparcus/opusparcus_v1',
                       use_dev_set=args.dev_set, verbose=args.verbose),
@@ -46,7 +63,8 @@ def main():
         if args.num_trials > 1:
             print(f'Trial {k+1}/{args.num_trials}')
 
-        scores.append(evaluate_models(models, tasks))
+        scores.append(evaluate_models(models, tasks, hyperparameters))
+
     scores = (pd.concat(scores)
               .groupby(['task', 'score_label', 'model'])
               .agg([np.mean, np.std]))
@@ -57,7 +75,7 @@ def main():
     save_results(scores, args.resultdir)
 
 
-def evaluate_models(models, tasks):
+def evaluate_models(models, tasks, hyperparameters):
     scores = []
     for task in tasks:
         for model in models:
@@ -65,7 +83,10 @@ def evaluate_models(models, tasks):
             print(f'*** Task: {task.name}, model: {model.name} ***')
             print()
 
-            score = task.evaluate(model)
+            hyp = hyperparameters.get(task.name, model.name)
+            print(json.dumps(hyp))
+
+            score = task.evaluate(model, hyp)
 
             scores.append({
                 'task': task.name,
@@ -101,6 +122,8 @@ def parse_args():
     parser.add_argument('--fast', action='store_true',
                         help='Use simpler final classifier. Faster but less '
                         'accurate. Good for debugging')
+    parser.add_argument('--hyperparameters',
+                        help='Input file that contains the hyperparameters.')
     parser.add_argument('--verbose', action='store_true',
                         help='Show verbose output')
     parser.add_argument('--resultdir', default='results',
