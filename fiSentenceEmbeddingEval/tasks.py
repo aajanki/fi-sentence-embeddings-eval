@@ -256,7 +256,7 @@ class OpusparcusTask:
     def build_classifier(self, input_dim, num_classes,
                          hidden_dim1=64, l2reg=1e-4):
         model = Sequential()
-        model.add(Dense(hidden_dim1,
+        model.add(Dense(int(hidden_dim1),
                         activation='sigmoid',
                         kernel_regularizer=regularizers.l2(l2reg),
                         bias_regularizer=regularizers.l2(l2reg),
@@ -354,7 +354,7 @@ class YlilautaConsecutiveSentencesTask:
 
     def build_classifier(self, input_dim, hidden_dim1=64, l2reg=1e-5):
         model = Sequential()
-        model.add(Dense(hidden_dim1,
+        model.add(Dense(int(hidden_dim1),
                         activation='sigmoid',
                         kernel_regularizer=regularizers.l2(l2reg),
                         bias_regularizer=regularizers.l2(l2reg),
