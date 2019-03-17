@@ -1,4 +1,5 @@
 import json
+import os
 from hyperopt import fmin, tpe, Trials, STATUS_OK, hp
 from voikko import libvoikko
 from .models import *
@@ -186,6 +187,8 @@ def tune():
             }
         },
     ]
+
+    os.makedirs('results', exist_ok=True)
 
     best_params = {}
     for kv in evaluations:
