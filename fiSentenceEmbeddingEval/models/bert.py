@@ -72,3 +72,12 @@ class Bert(SentenceEmbeddingModel):
         finally:
             os.unlink(output_filename)
             os.unlink(input_filename)
+
+    def transform_pairs(self, sentence_pairs):
+        """Encode a pair of sentences as one vector"""
+
+        def merge_sentences(x):
+            return x.iloc[0] + ' ||| ' + x.iloc[1]
+
+        concatenated = sentence_pairs.apply(merge_sentence, axis=1)
+        return self.transform(concatenated)
