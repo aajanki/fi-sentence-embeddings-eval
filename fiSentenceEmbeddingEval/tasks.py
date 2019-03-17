@@ -220,17 +220,14 @@ class OpusparcusTask:
         return ps
 
     def build_classifier(self, input_dim, num_classes,
-                         hidden_dim1=64, l2reg=1e-4):
+                         hidden_dim1=64, dropout_prop=0.5):
         model = Sequential()
+        model.add(Dropout(dropout_prop, input_shape=(input_dim, )))
         model.add(Dense(int(hidden_dim1),
-                        activation='sigmoid',
-                        kernel_regularizer=regularizers.l2(l2reg),
-                        bias_regularizer=regularizers.l2(l2reg),
-                        input_shape=(input_dim, )))
+                        activation='sigmoid'))
+        model.add(Dropout(dropout_prop))
         model.add(Dense(num_classes,
-                        activation='softmax',
-                        kernel_regularizer=regularizers.l2(l2reg),
-                        bias_regularizer=regularizers.l2(l2reg)))
+                        activation='softmax'))
         model.compile(loss='kullback_leibler_divergence',
                       optimizer='adam')
         if self.verbose:
@@ -310,19 +307,15 @@ class YlilautaConsecutiveSentencesTask:
         clf.fit(X, y)
         return clf
 
-    def build_classifier(self, input_dim, hidden_dim1=64, l2reg=1e-5):
+    def build_classifier(self, input_dim, hidden_dim1=64, dropout_prop=0.5):
         model = Sequential()
-        model.add(Dense(int(hidden_dim1),
-                        activation='sigmoid',
-                        kernel_regularizer=regularizers.l2(l2reg),
-                        bias_regularizer=regularizers.l2(l2reg),
-                        input_shape=(input_dim, )))
-        model.add(Dense(1,
-                        activation='sigmoid',
-                        kernel_regularizer=regularizers.l2(l2reg),
-                        bias_regularizer=regularizers.l2(l2reg)))
+        model.add(Dropout(dropout_prop, input_shape=(input_dim, )))
+        model.add(Dense(int(hidden_dim1), activation='sigmoid'))
+        model.add(Dropout(dropout_prop))
+        model.add(Dense(1, activation='sigmoid'))
         model.compile(loss='binary_crossentropy', optimizer='adam',
                       metrics=['accuracy'])
+
         if self.verbose:
             print(model.summary())
 

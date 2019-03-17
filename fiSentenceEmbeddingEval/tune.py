@@ -95,7 +95,7 @@ def tune():
             'embedding_model': model_w2v,
             'space': {
                 'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
-                'l2reg': hp.loguniform('l2reg', np.log(1e-8), np.log(1e-2)),
+                'dropout_prop': hp.uniform('dropout_prop', 0.3, 0.7),
             }
         },
         {
@@ -103,7 +103,7 @@ def tune():
             'embedding_model': model_fasttest,
             'space': {
                 'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
-                'l2reg': hp.loguniform('l2reg', np.log(1e-8), np.log(1e-2)),
+                'dropout_prop': hp.uniform('dropout_prop', 0.3, 0.7),
             }
         },
         {
@@ -111,7 +111,7 @@ def tune():
             'embedding_model': model_bert,
             'space': {
                 'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
-                'l2reg': hp.loguniform('l2reg', np.log(1e-8), np.log(1e-2)),
+                'dropout_prop': hp.uniform('dropout_prop', 0.3, 0.7),
             }
         },
         {
@@ -119,7 +119,7 @@ def tune():
             'embedding_model': model_tfidf,
             'space': {
                 'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
-                'l2reg': hp.loguniform('l2reg', np.log(1e-8), np.log(1e-2)),
+                'dropout_prop': hp.uniform('dropout_prop', 0.3, 0.7),
             }
         },
         {
@@ -127,7 +127,7 @@ def tune():
             'embedding_model': model_sif,
             'space': {
                 'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
-                'l2reg': hp.loguniform('l2reg', np.log(1e-8), np.log(1e-2)),
+                'dropout_prop': hp.uniform('dropout_prop', 0.3, 0.7),
             }
         },
         {
@@ -135,7 +135,7 @@ def tune():
             'embedding_model': model_borep,
             'space': {
                 'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
-                'l2reg': hp.loguniform('l2reg', np.log(1e-8), np.log(1e-2)),
+                'dropout_prop': hp.uniform('dropout_prop', 0.3, 0.7),
             }
         },
         {
@@ -143,7 +143,7 @@ def tune():
             'embedding_model': model_w2v,
             'space': {
                 'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
-                'l2reg': hp.loguniform('l2reg', np.log(1e-8), np.log(1e-2)),
+                'dropout_prop': hp.uniform('dropout_prop', 0.3, 0.7),
             }
         },
         {
@@ -151,7 +151,7 @@ def tune():
             'embedding_model': model_fasttest,
             'space': {
                 'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
-                'l2reg': hp.loguniform('l2reg', np.log(1e-8), np.log(1e-2)),
+                'dropout_prop': hp.uniform('dropout_prop', 0.3, 0.7),
             }
         },
         {
@@ -159,7 +159,7 @@ def tune():
             'embedding_model': model_bert,
             'space': {
                 'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
-                'l2reg': hp.loguniform('l2reg', np.log(1e-8), np.log(1e-2)),
+                'dropout_prop': hp.uniform('dropout_prop', 0.3, 0.7),
             }
         },
         {
@@ -167,7 +167,7 @@ def tune():
             'embedding_model': model_tfidf,
             'space': {
                 'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
-                'l2reg': hp.loguniform('l2reg', np.log(1e-8), np.log(1e-2)),
+                'dropout_prop': hp.uniform('dropout_prop', 0.3, 0.7),
             }
         },
         {
@@ -175,7 +175,7 @@ def tune():
             'embedding_model': model_sif,
             'space': {
                 'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
-                'l2reg': hp.loguniform('l2reg', np.log(1e-8), np.log(1e-2)),
+                'dropout_prop': hp.uniform('dropout_prop', 0.3, 0.7),
             }
         },
         {
@@ -183,7 +183,7 @@ def tune():
             'embedding_model': model_borep,
             'space': {
                 'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
-                'l2reg': hp.loguniform('l2reg', np.log(1e-8), np.log(1e-2)),
+                'dropout_prop': hp.uniform('dropout_prop', 0.3, 0.7),
             }
         },
     ]
