@@ -16,10 +16,10 @@ class Bert(SentenceEmbeddingModel):
     Uses a pre-trained BERT model.
     """
 
-    def __init__(self, name, path, num_layers=1):
+    def __init__(self, name, path, layers=None):
         super().__init__(name)
         self.path = path
-        self.num_layers = num_layers
+        self.layers = [-1] if layers is None else layers
 
         config = json.load(open(os.path.join(self.path, 'bert_config.json')))
         self.vocab_size = config.get('vocab_size')
@@ -29,12 +29,10 @@ class Bert(SentenceEmbeddingModel):
         return '\n'.join([
             f'Embedding dimensionality: {self.embedding_dim}',
             f'Vocabulary size: {self.vocab_size}',
-            f'Number of combined layers: {self.num_layers}'
+            f'Layers: {", ".join(str(x) for x in self.layers)}'
         ])
 
     def transform(self, sentences):
-        layers = ','.join(f'-{i+1}' for i in range(self.num_layers))
-        
         out_f, output_filename = tempfile.mkstemp('.jsonl', 'bert-output')
         os.close(out_f)
 
@@ -51,13 +49,13 @@ class Bert(SentenceEmbeddingModel):
                 '--vocab_file=' + os.path.join(self.path, 'vocab.txt'),
                 '--bert_config_file=' + os.path.join(self.path, 'bert_config.json'),
                 '--init_checkpoint=' + os.path.join(self.path, 'bert_model.ckpt'),
-                '--layers=' + layers,
+                '--layers=' + ','.join(str(x) for x in self.layers),
                 '--max_seq_length=128',
                 '--batch_size=8'
             ]
 
             flags_passthrough = bert.extract_features.FLAGS(
-                ['extract_features.py'] + args,
+                [__file__] + args,
                 known_only=True)
             bert.extract_features.main(flags_passthrough)
 
@@ -79,5 +77,5 @@ class Bert(SentenceEmbeddingModel):
         def merge_sentences(x):
             return x.iloc[0] + ' ||| ' + x.iloc[1]
 
-        concatenated = sentence_pairs.apply(merge_sentence, axis=1)
+        concatenated = sentence_pairs.apply(merge_sentences, axis=1)
         return self.transform(concatenated)

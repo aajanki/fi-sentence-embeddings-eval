@@ -25,7 +25,7 @@ def tune():
         'pretrained/fasttext-fi/cc.fi.300.bin')
     model_bert = Bert(
         'BERT multilingual',
-        'pretrained/bert/multi_cased_L-12_H-768_A-12', 1)
+        'pretrained/bert/multi_cased_L-12_H-768_A-12')
     model_tfidf = TfidfVectors('TF-IDF', voikko)
     model_sif = SIF(
         'SIF',
@@ -110,7 +110,7 @@ def tune():
             'task': task_opusparcus,
             'embedding_model': model_bert,
             'space': {
-                'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
+                'hidden_dim1': hp.quniform('hidden_dim1', 30, 768, 10),
                 'dropout_prop': hp.uniform('dropout_prop', 0.3, 0.7),
             }
         },
@@ -158,7 +158,7 @@ def tune():
             'task': task_ylilauta,
             'embedding_model': model_bert,
             'space': {
-                'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
+                'hidden_dim1': hp.quniform('hidden_dim1', 30, 768, 10),
                 'dropout_prop': hp.uniform('dropout_prop', 0.3, 0.7),
             }
         },
