@@ -17,32 +17,6 @@ def zero_decimals(x):
     return f'{x:.0f}'
 
 
-def sentence_pair_features(embeddings, sentences1, sentences2):
-    """Compute a feature vector for a sentence pair
-
-    The vector is a concatenation of u*v and |u - v|, where u is the
-    sentence embedding for the first sentence and v for the second
-    sentence.
-
-    This technique was introduced by Kai Sheng Tai, Richard Socher,
-    Christopher D. Manning: "Improved Semantic Representations From
-    Tree-Structured Long Short-Term Memory Networks"
-    """
-    
-    embeddings1 = embeddings.transform(sentences1)
-    embeddings2 = embeddings.transform(sentences2)
-
-    if sparse.issparse(embeddings1):
-        embeddings1 = np.asarray(embeddings1.todense())
-    if sparse.issparse(embeddings2):
-        embeddings2 = np.asarray(embeddings2.todense())
-
-    return np.concatenate((
-        np.multiply(embeddings1, embeddings2),
-        np.abs(embeddings1 - embeddings2)
-    ), axis=1)
-
-
 class TDTCategoryClassificationTask:
     """Category classification
 
@@ -185,18 +159,10 @@ class OpusparcusTask:
         self.print_data_summary(self.df_train, self.df_test)
 
     def prepare_data(self, embeddings):
-        all_sentences = (self.df_train['sentence1']
-                         .append(self.df_train['sentence2']))
-        embeddings.fit(all_sentences)
-
-        X_train = sentence_pair_features(embeddings,
-                                         self.df_train['sentence1'],
-                                         self.df_train['sentence2'])
+        X_train = embeddings.transform_pairs(self.df_train[['sentence1', 'sentence2']])
         y_train = self.train_class_probabilities(self.df_train)
 
-        X_test = sentence_pair_features(embeddings,
-                                        self.df_test['sentence1'],
-                                        self.df_test['sentence2'])
+        X_test = embeddings.transform_pairs(self.df_test[['sentence1', 'sentence2']])
         y_test = self.df_test['score']
 
         return X_train, y_train, X_test, y_test
@@ -317,18 +283,10 @@ class YlilautaConsecutiveSentencesTask:
         self.print_data_summary(self.df_train, self.df_test)
 
     def prepare_data(self, embeddings):
-        all_sentences = (self.df_train['sentence1']
-                         .append(self.df_train['sentence2']))
-        embeddings.fit(all_sentences)
-
-        X_train = sentence_pair_features(embeddings,
-                                   self.df_train['sentence1'],
-                                   self.df_train['sentence2'])
+        X_train = embeddings.transform_pairs(self.df_train[['sentence1', 'sentence2']])
         y_train = (self.df_train['label'] == 1).astype(int)
 
-        X_test = sentence_pair_features(embeddings,
-                                        self.df_test['sentence1'],
-                                        self.df_test['sentence2'])
+        X_test = embeddings.transform_pairs(self.df_test[['sentence1', 'sentence2']])
         y_test = (self.df_test['label'] == 1).astype(int)
 
         return X_train, y_train, X_test, y_test
