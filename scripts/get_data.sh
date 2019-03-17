@@ -29,6 +29,10 @@ python fiSentenceEmbeddingEval/prepare-ylilauta.py
 
 ### PRE-TRAINED MODELS ###
 
+# word2vec embeddings for Finnish
+mkdir -p pretrained/fin-word2vec/
+wget -P pretrained/fin-word2vec/ http://bionlp-www.utu.fi/fin-vector-space-models/fin-word2vec.bin
+
 # FastText Finnish model
 # https://github.com/facebookresearch/fastText/blob/master/docs/crawl-vectors.md
 mkdir -p pretrained/fasttext-fi
