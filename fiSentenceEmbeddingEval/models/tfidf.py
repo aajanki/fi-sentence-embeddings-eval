@@ -17,7 +17,10 @@ class TfidfVectors(SentenceEmbeddingModel):
         self.vectorizer.fit(sentences)
 
     def describe(self):
-        return f'Vocabulary size: {len(self.vectorizer.vocabulary_)}'
+        return '\n'.join([
+            self.name,
+            f'Vocabulary size: {len(self.vectorizer.vocabulary_)}'
+        ])
 
     def transform(self, sentences):
         return self.vectorizer.transform(sentences)

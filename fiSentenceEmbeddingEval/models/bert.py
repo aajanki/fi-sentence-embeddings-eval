@@ -27,6 +27,7 @@ class Bert(SentenceEmbeddingModel):
 
     def describe(self):
         return '\n'.join([
+            self.name,
             f'Embedding dimensionality: {self.embedding_dim}',
             f'Vocabulary size: {self.vocab_size}',
             f'Layers: {", ".join(str(x) for x in self.layers)}'

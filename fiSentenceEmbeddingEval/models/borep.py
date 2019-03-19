@@ -27,6 +27,7 @@ class BOREP(PooledWord2Vec):
 
     def describe(self):
         return '\n'.join([
+            self.name,
             f'Projection dimensionality: {self.W.shape[0]}',
             f'Original embedding dimensionality: {self.W.shape[1]}',
             f'Vocabulary size: {len(self.model.vocab)}'

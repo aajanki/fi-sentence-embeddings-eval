@@ -11,6 +11,7 @@ class PooledFastText(SentenceEmbeddingModel):
 
     def describe(self):
         return '\n'.join([
+            self.name,
             f'Embedding dimensionality: {self.model.vector_size}',
             f'Vocabulary size: {len(self.model.wv.vocab)}'
         ])
