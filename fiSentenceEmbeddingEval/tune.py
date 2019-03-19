@@ -1,5 +1,6 @@
 import json
 import os
+from itertools import chain
 from hyperopt import fmin, tpe, Trials, hp
 from voikko import libvoikko
 from .models import *
@@ -8,179 +9,74 @@ from .tasks import *
 
 def tune():
     voikko = libvoikko.Voikko('fi')
-    task_tdt = TDTCategoryClassificationTask('TDT categories',
-                                             'data/UD_Finnish-TDT',
-                                             use_dev_set=True)
-    task_opusparcus = OpusparcusTask('Opusparcus',
-                                     'data/opusparcus/opusparcus_v1',
-                                     use_dev_set=True)
-    task_ylilauta = YlilautaConsecutiveSentencesTask('Ylilauta',
-                                                     'data/ylilauta',
-                                                     use_dev_set=True)
-    model_w2v = PooledWord2Vec(
-        'Pooled word2vec',
-        'pretrained/fin-word2vec/fin-word2vec.bin')
-    model_fasttest = PooledFastText(
-        'Pooled FastText',
-        'pretrained/fasttext-fi/cc.fi.300.bin')
-    model_bert = Bert(
-        'BERT multilingual',
-        'pretrained/bert/multi_cased_L-12_H-768_A-12', [-3])
-    model_tfidf = TfidfVectors('TF-IDF', voikko)
-    model_sif = SIF(
-        'SIF',
-        'data/finnish_vocab/finnish_vocab.txt.gz',
-        'pretrained/fin-word2vec/fin-word2vec.bin')
-    model_borep = BOREP(
-        'BOREP',
-        'pretrained/fin-word2vec/fin-word2vec.bin',
-        4096)
-    evaluations = [
-        {
-            'task': task_tdt,
-            'embedding_model': model_w2v,
-            'space': {
-                'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
-                'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
-            }
-        },
-        {
-            'task': task_tdt,
-            'embedding_model': model_fasttest,
-            'space': {
-                'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
-                'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
-            }
-        },
-        {
-            'task': task_tdt,
-            'embedding_model': model_bert,
-            'space': {
-                'hidden_dim1': hp.quniform('hidden_dim1', 30, 768, 10),
-                'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
-            }
-        },
-        {
-            'task': task_tdt,
-            'embedding_model': model_tfidf,
-            'space': {
-                'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
-                'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
-            }
-        },
-        {
-            'task': task_tdt,
-            'embedding_model': model_sif,
-            'space': {
-                'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
-                'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
-            }
-        },
-        {
-            'task': task_tdt,
-            'embedding_model': model_borep,
-            'space': {
-                'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
-                'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
-            }
-        },
-        {
-            'task': task_opusparcus,
-            'embedding_model': model_w2v,
-            'space': {
-                'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
-                'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
-            }
-        },
-        {
-            'task': task_opusparcus,
-            'embedding_model': model_fasttest,
-            'space': {
-                'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
-                'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
-            }
-        },
-        {
-            'task': task_opusparcus,
-            'embedding_model': model_bert,
-            'space': {
-                'hidden_dim1': hp.quniform('hidden_dim1', 30, 768, 10),
-                'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
-            }
-        },
-        {
-            'task': task_opusparcus,
-            'embedding_model': model_tfidf,
-            'space': {
-                'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
-                'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
-            }
-        },
-        {
-            'task': task_opusparcus,
-            'embedding_model': model_sif,
-            'space': {
-                'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
-                'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
-            }
-        },
-        {
-            'task': task_opusparcus,
-            'embedding_model': model_borep,
-            'space': {
-                'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
-                'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
-            }
-        },
-        {
-            'task': task_ylilauta,
-            'embedding_model': model_w2v,
-            'space': {
-                'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
-                'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
-            }
-        },
-        {
-            'task': task_ylilauta,
-            'embedding_model': model_fasttest,
-            'space': {
-                'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
-                'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
-            }
-        },
-        {
-            'task': task_ylilauta,
-            'embedding_model': model_bert,
-            'space': {
-                'hidden_dim1': hp.quniform('hidden_dim1', 30, 768, 10),
-                'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
-            }
-        },
-        {
-            'task': task_ylilauta,
-            'embedding_model': model_tfidf,
-            'space': {
-                'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
-                'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
-            }
-        },
-        {
-            'task': task_ylilauta,
-            'embedding_model': model_sif,
-            'space': {
-                'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
-                'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
-            }
-        },
-        {
-            'task': task_ylilauta,
-            'embedding_model': model_borep,
-            'space': {
-                'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
-                'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
-            }
-        },
+    tasks = [
+        TDTCategoryClassificationTask('TDT categories',
+                                      'data/UD_Finnish-TDT',
+                                      use_dev_set=True),
+        OpusparcusTask('Opusparcus',
+                       'data/opusparcus/opusparcus_v1',
+                       use_dev_set=True),
+        YlilautaConsecutiveSentencesTask('Ylilauta',
+                                         'data/ylilauta',
+                                         use_dev_set=True)
     ]
+
+    def model_w2v():
+        return PooledWord2Vec(
+            'Pooled word2vec',
+            'pretrained/fin-word2vec/fin-word2vec.bin')
+
+    def model_fasttext():
+        return PooledFastText(
+            'Pooled FastText',
+            'pretrained/fasttext-fi/cc.fi.300.bin')
+
+    def model_bert():
+        return Bert(
+            'BERT multilingual',
+            'pretrained/bert/multi_cased_L-12_H-768_A-12', [-3])
+
+    def model_tfidf():
+        return TfidfVectors('TF-IDF', voikko)
+
+    def model_sif():
+        return SIF(
+            'SIF',
+            'data/finnish_vocab/finnish_vocab.txt.gz',
+            'pretrained/fin-word2vec/fin-word2vec.bin')
+
+    def model_borep():
+        return BOREP(
+            'BOREP',
+            'pretrained/fin-word2vec/fin-word2vec.bin',
+            4096)
+
+    evaluations = chain(
+        evaluations_for_model(model_w2v(), tasks, {
+            'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
+            'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
+        }),
+        evaluations_for_model(model_fasttext(), tasks, {
+            'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
+            'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
+        }),
+        evaluations_for_model(model_bert(), tasks, {
+            'hidden_dim1': hp.quniform('hidden_dim1', 30, 768, 10),
+            'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
+        }),
+        evaluations_for_model(model_tfidf(), tasks, {
+            'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
+            'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
+        }),
+        evaluations_for_model(model_sif(), tasks, {
+            'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
+            'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
+        }),
+        evaluations_for_model(model_borep(), tasks, {
+            'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
+            'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
+        })
+    )
 
     os.makedirs('results', exist_ok=True)
 
@@ -204,16 +100,27 @@ def tune():
                     algo=tpe.suggest,
                     max_evals=40,
                     trials=trials)
-        print(f'best parameters for {kv["embedding_model"].name} in task {task.name}')
+        best_score = -np.min(trials.losses())
+        print(f'best score for {kv["embedding_model"].name} in task {task.name}: {best_score}')
+        print('parameters:')
         print(best)
 
         best_params.setdefault(task.name, {})[kv['embedding_model'].name] = {
             'parameters': best,
-            'score': -np.min(trials.losses())
+            'score': best_score
         }
 
         with open('results/hyperparameters.json', 'w') as f:
             json.dump(best_params, f, indent=2)
+
+
+def evaluations_for_model(embedding_model, tasks, space):
+    for task in tasks:
+        yield {
+            'task': task,
+            'embedding_model': embedding_model,
+            'space': space
+        }
 
 
 if __name__ == '__main__':
