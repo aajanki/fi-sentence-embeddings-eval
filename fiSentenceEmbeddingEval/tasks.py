@@ -76,13 +76,10 @@ class TDTCategoryClassificationTask:
         return pipeline
 
     def nn_classifier_model(self, input_dim=300, num_classes=3,
-                            hidden_dim1=128, hidden_dim2=32,
-                            dropout_prop=0.3):
+                            hidden_dim1=128, dropout_prop=0.3):
         model = Sequential()
         model.add(Dropout(dropout_prop, input_shape=(input_dim, )))
         model.add(Dense(int(hidden_dim1), activation='tanh'))
-        model.add(Dropout(dropout_prop))
-        model.add(Dense(int(hidden_dim2), activation='tanh'))
         model.add(Dropout(dropout_prop))
         model.add(Dense(num_classes, activation='softmax'))
         model.compile(loss='categorical_crossentropy',

@@ -41,7 +41,6 @@ def tune():
             'embedding_model': model_w2v,
             'space': {
                 'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
-                'hidden_dim2': hp.quniform('hidden_dim2', 4, 100, 5),
                 'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
             }
         },
@@ -50,7 +49,6 @@ def tune():
             'embedding_model': model_fasttest,
             'space': {
                 'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
-                'hidden_dim2': hp.quniform('hidden_dim2', 4, 100, 5),
                 'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
             }
         },
@@ -59,7 +57,6 @@ def tune():
             'embedding_model': model_bert,
             'space': {
                 'hidden_dim1': hp.quniform('hidden_dim1', 30, 768, 10),
-                'hidden_dim2': hp.quniform('hidden_dim2', 20, 300, 5),
                 'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
             }
         },
@@ -68,7 +65,6 @@ def tune():
             'embedding_model': model_tfidf,
             'space': {
                 'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
-                'hidden_dim2': hp.quniform('hidden_dim2', 20, 300, 5),
                 'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
             }
         },
@@ -77,7 +73,6 @@ def tune():
             'embedding_model': model_sif,
             'space': {
                 'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
-                'hidden_dim2': hp.quniform('hidden_dim2', 10, 100, 5),
                 'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
             }
         },
@@ -86,7 +81,6 @@ def tune():
             'embedding_model': model_borep,
             'space': {
                 'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
-                'hidden_dim2': hp.quniform('hidden_dim2', 20, 300, 5),
                 'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
             }
         },
