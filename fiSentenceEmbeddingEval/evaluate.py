@@ -53,7 +53,7 @@ def main():
         BOREP('BOREP',
               'pretrained/fin-word2vec/fin-word2vec.bin', 4096),
         Bert('BERT multilingual',
-             'pretrained/bert/multi_cased_L-12_H-768_A-12', 1),
+             'pretrained/bert/multi_cased_L-12_H-768_A-12', [-3]),
     ]
 
     print(f'Running evaluation on {len(tasks)} tasks and {len(models)} models')
