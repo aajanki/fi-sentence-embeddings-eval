@@ -83,11 +83,12 @@ def tune():
     best_params = {}
     for kv in evaluations:
         task = kv['task']
+        embedding_model = kv['embedding_model']
         X_train, y_train, X_test, y_test = \
-            task.prepare_data(kv['embedding_model'])
+            task.prepare_data(embedding_model)
 
         def objective(space):
-            print(kv['embedding_model'].name)
+            print(embedding_model.name)
             print(space)
 
             clf = task.train_classifier(X_train, y_train, space)
@@ -101,11 +102,11 @@ def tune():
                     max_evals=40,
                     trials=trials)
         best_score = -np.min(trials.losses())
-        print(f'best score for {kv["embedding_model"].name} in task {task.name}: {best_score}')
+        print(f'best score for {embedding_model.name} in task {task.name}: {best_score}')
         print('parameters:')
         print(best)
 
-        best_params.setdefault(task.name, {})[kv['embedding_model'].name] = {
+        best_params.setdefault(task.name, {})[embedding_model.name] = {
             'parameters': best,
             'score': best_score
         }

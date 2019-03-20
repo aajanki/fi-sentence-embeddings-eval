@@ -156,6 +156,12 @@ class OpusparcusTask:
         self.print_data_summary(self.df_train, self.df_test)
 
     def prepare_data(self, embeddings):
+        all_sentences = pd.concat([
+            self.df_train['sentence1'],
+            self.df_train['sentence2']
+        ], axis=0, ignore_index=True, sort=False)
+        embeddings.fit(all_sentences)
+
         X_train = embeddings.transform_pairs(self.df_train[['sentence1', 'sentence2']])
         y_train = self.train_class_probabilities(self.df_train)
 
@@ -277,6 +283,12 @@ class YlilautaConsecutiveSentencesTask:
         self.print_data_summary(self.df_train, self.df_test)
 
     def prepare_data(self, embeddings):
+        all_sentences = pd.concat([
+            self.df_train['sentence1'],
+            self.df_train['sentence2']
+        ], axis=0, ignore_index=True, sort=False)
+        embeddings.fit(all_sentences)
+
         X_train = embeddings.transform_pairs(self.df_train[['sentence1', 'sentence2']])
         y_train = (self.df_train['label'] == 1).astype(int)
 
