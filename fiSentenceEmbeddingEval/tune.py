@@ -1,6 +1,6 @@
 import json
 import os
-from itertools import chain
+import itertools
 from hyperopt import fmin, tpe, Trials, hp
 from voikko import libvoikko
 from .models import *
@@ -51,28 +51,28 @@ def tune():
             'pretrained/fin-word2vec/fin-word2vec.bin',
             4096)
 
-    evaluations = chain(
-        evaluations_for_model(model_w2v(), tasks, {
+    evaluations = itertools.chain(
+        evaluations_for_model(model_w2v, tasks, {
             'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
             'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
         }),
-        evaluations_for_model(model_fasttext(), tasks, {
+        evaluations_for_model(model_fasttext, tasks, {
             'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
             'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
         }),
-        evaluations_for_model(model_bert(), tasks, {
+        evaluations_for_model(model_bert, tasks, {
             'hidden_dim1': hp.quniform('hidden_dim1', 30, 768, 10),
             'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
         }),
-        evaluations_for_model(model_tfidf(), tasks, {
+        evaluations_for_model(model_tfidf, tasks, {
             'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
             'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
         }),
-        evaluations_for_model(model_sif(), tasks, {
+        evaluations_for_model(model_sif, tasks, {
             'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
             'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
         }),
-        evaluations_for_model(model_borep(), tasks, {
+        evaluations_for_model(model_borep, tasks, {
             'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
             'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
         })
@@ -115,13 +115,16 @@ def tune():
             json.dump(best_params, f, indent=2)
 
 
-def evaluations_for_model(embedding_model, tasks, space):
-    for task in tasks:
-        yield {
+def evaluations_for_model(embedding_model_builder, tasks, space):
+    def inner():
+        model = embedding_model_builder()
+        return ({
             'task': task,
-            'embedding_model': embedding_model,
+            'embedding_model': model,
             'space': space
-        }
+        } for task in tasks)
+
+    return itertools.chain.from_iterable(inner() for _ in range(1))
 
 
 if __name__ == '__main__':
