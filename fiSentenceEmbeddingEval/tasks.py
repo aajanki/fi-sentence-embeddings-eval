@@ -5,11 +5,9 @@ from keras import regularizers
 from keras.layers import Dense, Dropout
 from keras.models import Sequential
 from keras.wrappers.scikit_learn import KerasClassifier
-from scipy import sparse, stats
+from scipy import stats
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score, classification_report, confusion_matrix
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
 from .preprocess import load_UD, source_type_percentages
 
 
@@ -51,8 +49,6 @@ class TDTCategoryClassificationTask:
         return self.compute_score(clf, X_test, y_test)
 
     def train_classifier(self, X, y, params):
-        scaler = StandardScaler(with_mean=not sparse.issparse(X))
-
         if params.get('logreg', False):
             clf = LogisticRegression(multi_class='multinomial',
                                      solver='lbfgs',
@@ -68,18 +64,14 @@ class TDTCategoryClassificationTask:
                                   batch_size=8,
                                   verbose=1 if self.verbose else 0,
                                   **nnparams)
-        pipeline = Pipeline([
-            ('scaler', scaler),
-            ('classifier', clf)
-        ])
-        pipeline.fit(X, y)
-        return pipeline
+        clf.fit(X, y)
+        return clf
 
     def nn_classifier_model(self, input_dim=300, num_classes=3,
                             hidden_dim1=128, dropout_prop=0.3):
         model = Sequential()
         model.add(Dropout(dropout_prop, input_shape=(input_dim, )))
-        model.add(Dense(int(hidden_dim1), activation='tanh'))
+        model.add(Dense(int(hidden_dim1), activation='sigmoid'))
         model.add(Dropout(dropout_prop))
         model.add(Dense(num_classes, activation='softmax'))
         model.compile(loss='categorical_crossentropy',
