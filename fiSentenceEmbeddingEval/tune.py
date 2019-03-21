@@ -88,7 +88,7 @@ def tune():
             task.prepare_data(embedding_model)
 
         def objective(space):
-            print(embedding_model.name)
+            print(f'{embedding_model.name}, {task.name}')
             print(space)
 
             clf = task.train_classifier(X_train, y_train, space)
