@@ -1,4 +1,5 @@
 import os.path
+import time
 import numpy as np
 import pandas as pd
 from keras import regularizers
@@ -15,7 +16,27 @@ def zero_decimals(x):
     return f'{x:.0f}'
 
 
-class TDTCategoryClassificationTask:
+class BaseTask:
+    def evaluate(self, embeddings, hyperparameters):
+        X_train, y_train, X_test, y_test = self.prepare_data(embeddings)
+
+        t1 = time.process_time()
+        clf = self.train_classifier(X_train, y_train, hyperparameters)
+        train_duration = time.process_time() - t1
+
+        return self.compute_score(clf, X_test, y_test), train_duration
+
+    def prepare_data(self, embeddings):
+        raise NotImplementedError('prepare_data() must be implemented')
+
+    def train_classifier(self, X, y, params):
+        return None
+
+    def compute_score(self, clf, X_test, y_test):
+        return 0.0
+
+
+class TDTCategoryClassificationTask(BaseTask):
     """Category classification
 
     The data contains sentences from many Internet sites: blogs,
@@ -42,11 +63,6 @@ class TDTCategoryClassificationTask:
         y_test = self.df_test['source_type']
 
         return X_train, y_train, X_test, y_test
-
-    def evaluate(self, embeddings, hyperparameters):
-        X_train, y_train, X_test, y_test = self.prepare_data(embeddings)
-        clf = self.train_classifier(X_train, y_train, hyperparameters)
-        return self.compute_score(clf, X_test, y_test)
 
     def train_classifier(self, X, y, params):
         if params.get('logreg', False):
@@ -115,7 +131,7 @@ class TDTCategoryClassificationTask:
         print()
 
 
-class OpusparcusTask:
+class OpusparcusTask(BaseTask):
     """Paraphrase detection
 
     The data consists of movie subtitles. Multiple sets of subtitles
@@ -162,11 +178,6 @@ class OpusparcusTask:
 
         return X_train, y_train, X_test, y_test
         
-    def evaluate(self, embeddings, hyperparameters):
-        X_train, y_train, X_test, y_test = self.prepare_data(embeddings)
-        clf = self.train_classifier(X_train, y_train, hyperparameters)
-        return self.compute_score(clf, X_test, y_test)
-
     def train_classifier(self, X, y, params):
         nnparams = params.copy()
         if 'logreg' in nnparams:
@@ -250,7 +261,7 @@ class OpusparcusTask:
         print()
 
 
-class YlilautaConsecutiveSentencesTask:
+class YlilautaConsecutiveSentencesTask(BaseTask):
     """Predict if two sentence were originally consecutive or not
 
     The data is messages from the discussion forum Ylilauta.
@@ -289,11 +300,6 @@ class YlilautaConsecutiveSentencesTask:
 
         return X_train, y_train, X_test, y_test
         
-    def evaluate(self, embeddings, hyperparameters):
-        X_train, y_train, X_test, y_test = self.prepare_data(embeddings)
-        clf = self.train_classifier(X_train, y_train, hyperparameters)
-        return self.compute_score(clf, X_test, y_test)
-
     def train_classifier(self, X, y, params):
         nnparams = params.copy()
         if 'logreg' in nnparams:

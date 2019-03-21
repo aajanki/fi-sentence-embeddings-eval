@@ -86,13 +86,14 @@ def evaluate_models(models, tasks, hyperparameters):
             hyp = hyperparameters.get(task.name, model.name)
             print(json.dumps(hyp))
 
-            score = task.evaluate(model, hyp)
+            score, duration = task.evaluate(model, hyp)
 
             scores.append({
                 'task': task.name,
                 'score_label': task.score_label,
                 'model': model.name,
-                'score': score
+                'score': score,
+                'train_duration': duration
             })
 
     return pd.DataFrame(scores)
