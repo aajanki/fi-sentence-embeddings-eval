@@ -54,6 +54,7 @@ def main():
               'pretrained/fin-word2vec/fin-word2vec.bin', 4096),
         Bert('BERT multilingual',
              'pretrained/bert/multi_cased_L-12_H-768_A-12', [-3]),
+        Laser('LASER', os.path.join(os.getcwd(), 'LASER')),
     ]
 
     print(f'Running evaluation on {len(tasks)} tasks and {len(models)} models')

@@ -44,3 +44,13 @@ gunzip pretrained/fasttext-fi/cc.fi.300.bin.gz
 mkdir -p pretrained/bert
 wget -P pretrained/bert https://storage.googleapis.com/bert_models/2018_11_23/multi_cased_L-12_H-768_A-12.zip
 unzip -od pretrained/bert pretrained/bert/multi_cased_L-12_H-768_A-12.zip
+
+# LASER
+# https://github.com/facebookresearch/LASER
+#
+# Checkout the source code here because we need to run scripts from
+# the source root
+git clone https://github.com/facebookresearch/LASER.git
+export LASER=`pwd`/LASER
+LASER/install_external_tools.sh
+LASER/install_models.sh

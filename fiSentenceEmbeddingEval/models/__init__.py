@@ -4,3 +4,4 @@ from .pooled_fasttext import PooledFastText
 from .bert import Bert
 from .sif import SIF
 from .borep import BOREP
+from .laser import Laser

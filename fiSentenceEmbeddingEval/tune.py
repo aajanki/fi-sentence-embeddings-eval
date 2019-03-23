@@ -1,6 +1,7 @@
+import itertools
 import json
 import os
-import itertools
+import os.path
 from hyperopt import fmin, tpe, Trials, hp
 from voikko import libvoikko
 from .models import *
@@ -51,28 +52,35 @@ def tune():
             'pretrained/fin-word2vec/fin-word2vec.bin',
             4096)
 
+    def model_laser():
+        return Laser('LASER', os.path.join(os.getcwd(), 'LASER'))
+
     evaluations = itertools.chain(
-        evaluations_for_model(model_w2v, tasks, {
-            'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
-            'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
-        }),
-        evaluations_for_model(model_fasttext, tasks, {
-            'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
-            'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
-        }),
-        evaluations_for_model(model_bert, tasks, {
-            'hidden_dim1': hp.quniform('hidden_dim1', 30, 768, 10),
-            'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
-        }),
-        evaluations_for_model(model_tfidf, tasks, {
-            'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
-            'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
-        }),
-        evaluations_for_model(model_sif, tasks, {
-            'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
-            'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
-        }),
-        evaluations_for_model(model_borep, tasks, {
+        # evaluations_for_model(model_w2v, tasks, {
+        #     'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
+        #     'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
+        # }),
+        # evaluations_for_model(model_fasttext, tasks, {
+        #     'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
+        #     'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
+        # }),
+        # evaluations_for_model(model_bert, tasks, {
+        #     'hidden_dim1': hp.quniform('hidden_dim1', 30, 768, 10),
+        #     'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
+        # }),
+        # evaluations_for_model(model_tfidf, tasks, {
+        #     'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
+        #     'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
+        # }),
+        # evaluations_for_model(model_sif, tasks, {
+        #     'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
+        #     'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
+        # }),
+        # evaluations_for_model(model_borep, tasks, {
+        #     'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
+        #     'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
+        # }),
+        evaluations_for_model(model_laser, tasks, {
             'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
             'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
         })
