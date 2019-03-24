@@ -33,6 +33,7 @@ Models included in the comparison:
 * Multilingual [BERT](https://github.com/google-research/bert/blob/master/multilingual.md)
 * [Smoothed Inverse Frequency weighting](https://openreview.net/forum?id=SyK00v5xx) (SIF) of word embeddings
 * [Bag of embedding projections](https://openreview.net/forum?id=BkgPajAcY7) (BOREP)
+* [LASER - Language-Agnostic SEntence Representations](https://github.com/facebookresearch/LASER)
 
 ## Download datasets and pre-trained models
 
