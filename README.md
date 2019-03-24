@@ -52,13 +52,12 @@ The results are written to results/scores.{csv, png}.
 ## Hyperparameter optimization
 
 ```
-pipenv run python -m fiSentenceEmbeddingEval.tune
+pipenv run scripts/tune_hyperparameters.sh
 ```
 
 The optimal hyperparameters are written to
-results/hyperparameters.jsonl. You need to manually inject the
-parameter values into the source code in
-fiSentenceEmbeddingEval/models/*.py.
+results/hyperparameters.json. The evaluation app `scripts/run.sh` will
+use the optimal hyperparameters from there.
 
 ## Preliminary results
 

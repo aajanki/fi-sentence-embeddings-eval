@@ -2,5 +2,5 @@
 
 export LASER=`pwd`/LASER
 
-python -m fiSentenceEmbeddingEval.evaluate
+python -m fiSentenceEmbeddingEval.evaluate --hyperparameters results/hyperparameters.json
 python -m fiSentenceEmbeddingEval.plot_results
