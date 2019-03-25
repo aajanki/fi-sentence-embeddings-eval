@@ -1,0 +1,155 @@
+{
+  "TDT categories": {
+    "Pooled word2vec": {
+      "parameters": {
+        "dropout_prop": 0.638190456754723,
+        "hidden_dim1": 140.0
+      },
+      "score": 0.7454931071049841
+    },
+    "Pooled FastText": {
+      "parameters": {
+        "dropout_prop": 0.24654369445465563,
+        "hidden_dim1": 10.0
+      },
+      "score": 0.721102863202545
+    },
+    "BERT multilingual": {
+      "parameters": {
+        "dropout_prop": 0.6338108690366673,
+        "hidden_dim1": 490.0
+      },
+      "score": 0.633085896076352
+    },
+    "TF-IDF": {
+      "parameters": {
+        "dropout_prop": 0.7847202561920132,
+        "hidden_dim1": 170.0
+      },
+      "score": 0.65
+    },
+    "SIF": {
+      "parameters": {
+        "dropout_prop": 0.43290456032090774,
+        "hidden_dim1": 130.0
+      },
+      "score": 0.7391304347826085
+    },
+    "BOREP": {
+      "parameters": {
+        "dropout_prop": 0.6886693156127378,
+        "hidden_dim1": 40.0
+      },
+      "score": 0.7476139978791092
+    },
+    "LASER": {
+      "parameters": {
+        "dropout_prop": 0.46979777835228087,
+        "hidden_dim1": 150.0
+      },
+      "score": 0.7486744432661719
+    }
+  },
+  "Opusparcus": {
+    "Pooled word2vec": {
+      "parameters": {
+        "dropout_prop": 0.5654292507818266,
+        "hidden_dim1": 190.0
+      },
+      "score": 0.49749268789132
+    },
+    "Pooled FastText": {
+      "parameters": {
+        "dropout_prop": 0.6053881942549367,
+        "hidden_dim1": 250.0
+      },
+      "score": 0.5202073259377935
+    },
+    "BERT multilingual": {
+      "parameters": {
+        "dropout_prop": 0.7916468137781945,
+        "hidden_dim1": 50.0
+      },
+      "score": 0.5613646555284336
+    },
+    "TF-IDF": {
+      "parameters": {
+        "dropout_prop": 0.5199052404094242,
+        "hidden_dim1": 920.0
+      },
+      "score": 0.27289053079802095
+    },
+    "SIF": {
+      "parameters": {
+        "dropout_prop": 0.41408213806668337,
+        "hidden_dim1": 50.0
+      },
+      "score": 0.5134595545691614
+    },
+    "BOREP": {
+      "parameters": {
+        "dropout_prop": 0.7244879126196746,
+        "hidden_dim1": 60.0
+      },
+      "score": 0.503165010744915
+    },
+    "LASER": {
+      "parameters": {
+        "dropout_prop": 0.7277189341044206,
+        "hidden_dim1": 160.0
+      },
+      "score": 0.5335776759656158
+    }
+  },
+  "Ylilauta": {
+    "Pooled word2vec": {
+      "parameters": {
+        "dropout_prop": 0.30342662644226565,
+        "hidden_dim1": 110.0
+      },
+      "score": 0.766
+    },
+    "Pooled FastText": {
+      "parameters": {
+        "dropout_prop": 0.26136446669629176,
+        "hidden_dim1": 270.0
+      },
+      "score": 0.706
+    },
+    "BERT multilingual": {
+      "parameters": {
+        "dropout_prop": 0.7951897188641843,
+        "hidden_dim1": 340.0
+      },
+      "score": 0.738
+    },
+    "SIF": {
+      "parameters": {
+        "dropout_prop": 0.46721279369040813,
+        "hidden_dim1": 300.0
+      },
+      "score": 0.784
+    },
+    "TF-IDF": {
+      "parameters": {
+        "dropout_prop": 0.20183395470115623,
+        "hidden_dim1": 160.0
+      },
+      "score": 0.57
+    },
+    "BOREP": {
+      "parameters": {
+        "dropout_prop": 0.636458250888132,
+        "hidden_dim1": 270.0
+      },
+      "score": 0.766
+    },
+    "LASER": {
+      "parameters": {
+        "dropout_prop": 0.6319743360998809,
+        "hidden_dim1": 120.0
+      },
+      "score": 0.724
+    }
+  }
+}

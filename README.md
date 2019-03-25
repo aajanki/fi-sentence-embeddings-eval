@@ -56,8 +56,13 @@ pipenv run scripts/tune_hyperparameters.sh
 ```
 
 The optimal hyperparameters are written to
-results/hyperparameters.json. The evaluation app `scripts/run.sh` will
-use the optimal hyperparameters from there.
+results/hyperparameters.json.
+
+To start using the tuned parameters copy the file to the models
+subdirectory:
+```
+cp results/hyperparameters.json models/hyperparameters.json
+```
 
 ## Preliminary results
 

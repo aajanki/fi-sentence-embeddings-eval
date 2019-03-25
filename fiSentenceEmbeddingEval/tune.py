@@ -77,11 +77,11 @@ def tune():
             'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
         }),
         evaluations_for_model(model_borep, tasks, {
-            'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
+            'hidden_dim1': hp.quniform('hidden_dim1', 30, 300, 10),
             'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
         }),
         evaluations_for_model(model_laser, tasks, {
-            'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
+            'hidden_dim1': hp.quniform('hidden_dim1', 30, 300, 10),
             'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
         })
     )
