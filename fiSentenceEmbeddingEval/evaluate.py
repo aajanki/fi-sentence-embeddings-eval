@@ -20,7 +20,9 @@ class Hyperparameters:
         self.hyperparameters['logreg'] = True
 
     def get(self, task_name, model_name):
-        return self.hyperparameters.get(task_name, {}).get(model_name, {})
+        return (self.hyperparameters.get(task_name, {})
+                .get(model_name, {})
+                .get('parameters', {}))
 
 
 def main():
