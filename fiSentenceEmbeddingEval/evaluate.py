@@ -46,23 +46,17 @@ def main():
     ]
 
     models = [
-        TfidfVectors('TF-IDF', voikko),
-        PooledWord2Vec('Pooled word2vec',
-                       'pretrained/fin-word2vec/fin-word2vec.bin'),
-        PooledFastText('Pooled FastText',
-                       'pretrained/fasttext-fi/cc.fi.300.bin'),
-        SIF('SIF',
-            'data/finnish_vocab/finnish_vocab.txt.gz',
-            'pretrained/fin-word2vec/fin-word2vec.bin'),
-        BOREP('BOREP',
-              'pretrained/fin-word2vec/fin-word2vec.bin', 4096),
-        Bert('BERT multilingual',
-             'pretrained/bert/multi_cased_L-12_H-768_A-12', [-3]),
-        Laser('LASER', os.environ['LASER'], verbose=args.verbose),
+        model_tfidf(voikko),
+        model_w2v(),
+        model_fasttext(),
+        model_sif(),
+        model_borep(),
+        model_bert(),
+        model_laser(os.environ['LASER'], args.verbose),
     ]
 
     print(f'Running evaluation on {len(tasks)} tasks and {len(models)} models')
-    
+
     scores = []
     for k in range(args.num_trials):
         if args.num_trials > 1:
@@ -82,8 +76,9 @@ def main():
 
 def evaluate_models(models, tasks, hyperparameters):
     scores = []
-    for task in tasks:
-        for model in models:
+    for model_builder in models:
+        model = model_builder()
+        for task in tasks:
             print()
             print(f'*** Task: {task.name}, model: {model.name} ***')
             print()
@@ -111,6 +106,60 @@ def save_results(scores, resultdir):
     flattened.columns = ['_'.join(x).rstrip('_')
                          for x in flattened.columns.values]
     flattened.to_csv(filename, index=False)
+
+
+def model_w2v():
+    def inner():
+        return PooledWord2Vec(
+            'Pooled word2vec',
+            'pretrained/fin-word2vec/fin-word2vec.bin')
+    return inner
+
+
+def model_fasttext():
+    def inner():
+        return PooledFastText(
+            'Pooled FastText',
+            'pretrained/fasttext-fi/cc.fi.300.bin')
+    return inner
+
+
+def model_bert():
+    def inner():
+        return Bert(
+            'BERT multilingual',
+            'pretrained/bert/multi_cased_L-12_H-768_A-12', [-3])
+    return inner
+
+
+def model_tfidf(voikko):
+    def inner():
+        return TfidfVectors('TF-IDF', voikko)
+    return inner
+
+
+def model_sif():
+    def inner():
+        return SIF(
+            'SIF',
+            'data/finnish_vocab/finnish_vocab.txt.gz',
+            'pretrained/fin-word2vec/fin-word2vec.bin')
+    return inner
+
+
+def model_borep():
+    def inner():
+        return BOREP(
+            'BOREP',
+            'pretrained/fin-word2vec/fin-word2vec.bin',
+            4096)
+    return inner
+
+
+def model_laser(laser_path, verbose):
+    def inner():
+        return Laser('LASER', laser_path, verbose)
+    return inner
 
 
 def two_decimals(x):
