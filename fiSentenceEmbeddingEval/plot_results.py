@@ -8,8 +8,11 @@ import matplotlib.pyplot as plt
 def main():
     args = parse_args()
     df = load_results(args.resultdir)
-    g = plot_facets(df)
-    save_plot(g, args.resultdir)
+    g = plot_facets(df, 'score_mean', 'Score')
+    save_plot(g, os.path.join(args.resultdir, 'scores.png'))
+
+    g = plot_facets(df, 'train_duration_mean', 'Duration (s)')
+    save_plot(g, os.path.join(args.resultdir, 'duration.png'))
 
 
 def load_results(resultdir):
@@ -17,20 +20,19 @@ def load_results(resultdir):
     return pd.read_csv(filename)
 
 
-def plot_facets(df):
+def plot_facets(df, y, ylabel):
     models = df.model.unique()
     g = sns.FacetGrid(df, col='task', hue='model', sharey=False,
                       height=4, aspect=0.6)
-    g.map(sns.barplot, 'model', 'score_mean', order=models)
+    g.map(sns.barplot, 'model', y, order=models)
     g.set_xlabels('')
-    g.set_ylabels('Score')
+    g.set_ylabels(ylabel)
     g.set_xticklabels(rotation=90)
     plt.tight_layout()
     return g
 
 
-def save_plot(g, resultdir):
-    filename = os.path.join(resultdir, 'scores.png')
+def save_plot(g, filename):
     plt.savefig(filename)
     print(f'Result plot saved to {filename}')
 
