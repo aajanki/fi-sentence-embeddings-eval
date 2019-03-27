@@ -68,20 +68,21 @@ cp results/hyperparameters.json models/hyperparameters.json
 
 The image shows performance of the models on the test sets.
 
-![Evaluation results on the test sets](images/scores-20190304.png)
+![Evaluation results on the test sets](images/scores-20190327.png)
 
-The embeddings from a given model are used as an input for a shallow
-neural network classifier. The classifier is trained on training data,
-the pre-trained embedding models are not trained. See the source code
-for the details.
+The embeddings from a given model are used as an input for a single
+hidden layer neural network classifier. The classifier is trained on
+training data, the pre-trained embedding models are not trained. The
+classifier parameters are learned on a development dataset for each
+task and embedding model separately. See the source code for the
+details.
 
 (Preliminary) conclusions:
-* Models based on word vectors (word2vec, FastText) perform much
-  better than TF-IDF
-* Simple aggregates of word vectors (average pooling, weighted average
-  of SIF) seems to perform better than the more advanced BERT. This is
-  in contrast to general experience in English. Maybe the BERT
-  training corpus for Finnish is too small?
-
-Caveat: The hyperparameters should be tuned more carefully. Might
-affect especially the higher dimensional models (BERT, BOREP).
+* Word embedding models perform much better than TF-IDF
+* SIF is among the top performing models in all tasks, but SIF is not
+  overwhelmingly better than plain average pooled word2vec. Still, my
+  first choice would be SIF due to it's simplicity.
+* More advanced models BERT and LASER, whic incorporate word context,
+  are not much better than SIF and often worse. This is in contrast to
+  general experiences in English. Maybe the BERT/LASER training
+  corpuses for Finnish are too small?
