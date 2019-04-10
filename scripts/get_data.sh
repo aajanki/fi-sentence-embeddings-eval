@@ -26,6 +26,12 @@ wget -P data/ylilauta/ https://korp.csc.fi/download/Ylilauta/ylilauta_20150304.z
 unzip -od data/ylilauta/ data/ylilauta/ylilauta_20150304.zip
 python fiSentenceEmbeddingEval/prepare-ylilauta.py
 
+# Eduskunta: Vastaukset kirjallisiin kysymyksiin
+mkdir -p data/eduskunta-vkk
+wget -P data/eduskunta-vkk https://github.com/aajanki/eduskunta-vkk/raw/1.0/vkk/train.csv.bz2
+wget -P data/eduskunta-vkk https://github.com/aajanki/eduskunta-vkk/raw/1.0/vkk/dev.csv.bz2
+wget -P data/eduskunta-vkk https://github.com/aajanki/eduskunta-vkk/raw/1.0/vkk/test.csv.bz2
+
 
 ### PRE-TRAINED MODELS ###
 

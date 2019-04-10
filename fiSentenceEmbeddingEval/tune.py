@@ -20,6 +20,9 @@ def tune():
         YlilautaConsecutiveSentencesTask('Ylilauta',
                                          'data/ylilauta',
                                          use_dev_set=True)
+        EduskuntaVKKClassificationTask('Eduskunta-VKK',
+                                       'data/eduskunta-vkk',
+                                       use_dev_set=True),
     ]
 
     def model_w2v():

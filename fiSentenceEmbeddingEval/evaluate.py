@@ -43,6 +43,9 @@ def main():
         YlilautaConsecutiveSentencesTask('Ylilauta', 'data/ylilauta',
                                          use_dev_set=args.dev_set,
                                          verbose=args.verbose),
+        EduskuntaVKKClassificationTask('Eduskunta-VKK', 'data/eduskunta-vkk',
+                                       use_dev_set=args.dev_set,
+                                       verbose=args.verbose),
     ]
 
     models = [

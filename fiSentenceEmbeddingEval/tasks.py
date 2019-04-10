@@ -36,31 +36,23 @@ class BaseTask:
         return 0.0
 
 
-class TDTCategoryClassificationTask(BaseTask):
-    """Category classification
-
-    The data contains sentences from many Internet sites: blogs,
-    Wikinews, Europarl, student magazine articles, etc.
-
-    The task is to predict the original source of a sentence.
-
-    Data reference: Turku Dependency Treebank (TDT) 2.2
-    https://universaldependencies.org/treebanks/fi_tdt/index.html
-    """
-
+class ClassificationTask(BaseTask):
     def __init__(self, name, datadir, use_dev_set=False, verbose=False):
         self.name = name
         self.score_label = 'F1 score'
         self.verbose = verbose
-        self.df_train, self.df_test = load_UD(datadir, use_dev_set)
+        self.df_train, self.df_test = self.load_data(datadir, use_dev_set)
         self.print_data_summary(self.df_train, self.df_test)
+
+    def load_data(self, datadir, use_dev_set):
+        raise NotImplementedError('load_data()')
 
     def prepare_data(self, embeddings):
         X_train, X_test = \
             self.sentence_embeddings(embeddings, self.df_train, self.df_test)
 
-        y_train = self.df_train['source_type']
-        y_test = self.df_test['source_type']
+        y_train = self.df_train['class']
+        y_test = self.df_test['class']
 
         return X_train, y_train, X_test, y_test
 
@@ -104,7 +96,8 @@ class TDTCategoryClassificationTask(BaseTask):
         print(classification_report(y_test, y_pred))
         print('Confusion matrix')
         print(pd.DataFrame(confusion_matrix(y_test, y_pred),
-                           columns=clf.classes_, index=clf.classes_))
+                           columns=clf.classes_, index=clf.classes_)
+              .to_string())
 
         f1 = f1_score(y_test, y_pred, average='micro')
         print(f'F1 score: {f1:.2f}')
@@ -124,11 +117,36 @@ class TDTCategoryClassificationTask(BaseTask):
         print(self.name)
         print(f'{df_train.shape[0]} train samples')
         print(f'{df_test.shape[0]} test samples')
-        print(f"{len(df_train['source_type'].unique())} classes")
+        print(f"{len(df_train['class'].unique())} classes")
         print('Class proportions:')
-        print(source_type_percentages(df_train, df_test).to_string(
+        print(self.class_percentages(df_train, df_test).to_string(
             float_format=zero_decimals))
         print()
+
+    def class_percentages(self, df_train, df_test):
+        return pd.DataFrame({
+            'train': df_train.groupby('class').size() / df_train.shape[0],
+            'test': df_test.groupby('class').size() / df_test.shape[0]
+        }) * 100
+
+
+class TDTCategoryClassificationTask(ClassificationTask):
+    """Category classification
+
+    The data contains sentences from many Internet sites: blogs,
+    Wikinews, Europarl, student magazine articles, etc.
+
+    The task is to predict the original source of a sentence.
+
+    Data reference: Turku Dependency Treebank (TDT) 2.2
+    https://universaldependencies.org/treebanks/fi_tdt/index.html
+    """
+
+    def load_data(self, datadir, use_dev_set):
+        df_train, df_test = load_UD(datadir, use_dev_set)
+        df_train = df_train.rename(columns={'source_type': 'class'})
+        df_test = df_test.rename(columns={'source_type': 'class'})
+        return df_train, df_test
 
 
 class OpusparcusTask(BaseTask):
@@ -344,3 +362,53 @@ class YlilautaConsecutiveSentencesTask(BaseTask):
         print(f'{df_train.shape[0]} train samples')
         print(f'{df_test.shape[0]} test samples')
         print()
+
+
+class EduskuntaVKKClassificationTask(ClassificationTask):
+    """Eduskunta: vastaus kirjalliseen kysymykseen
+
+    The task is the predict which ministry's response a sentence is
+    part of.
+
+    Data source: http://avoindata.eduskunta.fi/search-datasets.html
+    """
+
+    def load_data(self, datadir, use_dev_set):
+        df_train = self.load_dataset(os.path.join(datadir, 'train.csv.bz2'))
+        df_train = df_train[:10000]
+
+        test_filename = 'dev.csv.bz2' if use_dev_set else 'test.csv.bz2'
+        df_test = self.load_dataset(os.path.join(datadir, test_filename))
+
+        return df_train, df_test
+
+    def load_dataset(self, filename):
+        small_classes = [
+            'ulkomaankauppa- ja kehitysministeri',
+            'puolustusministeri',
+            'pääministeri',
+            'eurooppa-, kulttuuri- ja urheiluministeri'
+        ]
+        short_names = {
+            'perhe- ja peruspalveluministeri': 'per',
+            'maatalous- ja ympäristöministeri': 'maa',
+            'sisäministeri': 'sis',
+            'oikeus- ja työministeri': 'oik',
+            'opetus- ja kulttuuriministeri': 'ope',
+            'valtiovarainministeri': 'val',
+            'liikenne- ja viestintäministeri': 'lii',
+            'sosiaali- ja terveysministeri': 'sos',
+            'elinkeinoministeri': 'eli',
+            'ulkoministeri': 'ulk',
+            'kunta- ja uudistusministeri': 'kun',
+            'eurooppa-, kulttuuri- ja urheiluministeri': 'eur',
+            'pääministeri': 'pää',
+            'puolustusministeri': 'puo',
+            'ulkomaankauppa- ja kehitysministeri': 'uke',
+        }
+
+        df = pd.read_csv(filename, header=0)
+        return (df[~df['ministry'].isin(small_classes)]
+                .reset_index()
+                .rename(columns={'ministry': 'class'})
+                .replace(short_names))
