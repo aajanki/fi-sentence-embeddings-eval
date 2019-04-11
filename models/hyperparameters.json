@@ -151,5 +151,56 @@
       },
       "score": 0.724
     }
+  },
+  "Eduskunta-VKK": {
+    "Pooled word2vec": {
+      "parameters": {
+        "dropout_prop": 0.4231989469720127,
+        "hidden_dim1": 300.0
+      },
+      "score": 0.5790313996806812
+    },
+    "Pooled FastText": {
+      "parameters": {
+        "dropout_prop": 0.21243542573842944,
+        "hidden_dim1": 160.0
+      },
+      "score": 0.5731772219265566
+    },
+    "BERT multilingual": {
+      "parameters": {
+        "dropout_prop": 0.2123644838395093,
+        "hidden_dim1": 50.0
+      },
+      "score": 0.3772298006295908
+    },
+    "TF-IDF": {
+      "parameters": {
+        "dropout_prop": 0.6953968172773005,
+        "hidden_dim1": 70.0
+      },
+      "score": 0.593389296956978
+    },
+    "SIF": {
+      "parameters": {
+        "dropout_prop": 0.34138896991597667,
+        "hidden_dim1": 100.0
+      },
+      "score": 0.5838211814795103
+    },
+    "BOREP": {
+      "parameters": {
+        "dropout_prop": 0.6829139939101502,
+        "hidden_dim1": 300.0
+      },
+      "score": 0.5790313996806812
+    },
+    "LASER": {
+      "parameters": {
+        "dropout_prop": 0.21144443264074303,
+        "hidden_dim1": 240.0
+      },
+      "score": 0.5816923895689197
+    }
   }
 }
