@@ -58,8 +58,8 @@ pipenv run scripts/tune_hyperparameters.sh
 The optimal hyperparameters are written to
 results/hyperparameters.json.
 
-To start using the tuned parameters copy the file to the models
-subdirectory:
+To take the tuned parameters into use, copy the file to the models subdirectory:
+
 ```
 cp results/hyperparameters.json models/hyperparameters.json
 ```
@@ -68,7 +68,7 @@ cp results/hyperparameters.json models/hyperparameters.json
 
 The image shows performance of the models on the test sets.
 
-![Evaluation results on the test sets](images/scores-20190327.png)
+![Evaluation results on the test sets](images/scores-20190412.png)
 
 The embeddings from a given model are used as an input for a single
 hidden layer neural network classifier. The classifier is trained on
@@ -78,11 +78,11 @@ task and embedding model separately. See the source code for the
 details.
 
 (Preliminary) conclusions:
+* Average pooled word2vec or SIF (= frequency weighted average of
+  word2vec) should be the first choices because they are among the top
+  performers in all tested tasks.
 * Word embedding models perform much better than TF-IDF
-* SIF is among the top performing models in all tasks, but SIF is not
-  overwhelmingly better than plain average pooled word2vec. Still, my
-  first choice would be SIF due to it's simplicity.
-* More advanced models BERT and LASER, whic incorporate word context,
+* More advanced models BERT and LASER, which incorporate word context,
   are not much better than SIF and often worse. This is in contrast to
-  general experiences in English. Maybe the BERT/LASER training
+  general experiences on English. Maybe the BERT/LASER training
   corpuses for Finnish are too small?

@@ -1,4 +1,5 @@
 import argparse
+import math
 import os.path
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -19,7 +20,7 @@ def load_results(resultdir):
     return pd.read_csv(filename)
 
 
-def draw_plots(df, ycol, ylabel=None):
+def draw_plots(df, value_column, ylabel=None):
     models = df.model.unique()
     model_colors = ['C' + str(i + 1) for i in range(len(models))]
     task_score_labels = {
@@ -29,20 +30,23 @@ def draw_plots(df, ycol, ylabel=None):
             .to_dict('records')
     }
 
-    fig, ax = plt.subplots(1, len(task_score_labels))
-    fig.set_size_inches(16, 6)
+    nrows = 2
+    ncols = math.ceil(len(task_score_labels)/nrows)
+    fig, ax = plt.subplots(nrows, ncols)
+    fig.set_size_inches(8, 8)
     for i, (t, task_ylabel) in enumerate(task_score_labels.items()):
         tdata = df[df['task'] == t]
-        y = [tdata[tdata['model'] == m][ycol].values[0]
+        y = [tdata[tdata['model'] == m][value_column].values[0]
              for m in models]
 
-        ax[i].bar(range(len(models)), y, tick_label=models, color=model_colors)
-        ax[i].set_title(t)
-        ax[i].set_xlabel('')
-        ax[i].set_ylabel(ylabel or task_ylabel)
-        ax[i].set_xticklabels(ax[i].get_xticklabels(), rotation=90)
-        ax[i].spines['top'].set_visible(False)
-        ax[i].spines['right'].set_visible(False)
+        a = ax[math.floor(i/ncols), i % ncols]
+        a.bar(range(len(models)), y, tick_label=models, color=model_colors)
+        a.set_title(t)
+        a.set_xlabel('')
+        a.set_ylabel(ylabel or task_ylabel)
+        a.set_xticklabels(a.get_xticklabels(), rotation=90)
+        a.spines['top'].set_visible(False)
+        a.spines['right'].set_visible(False)
 
     plt.tight_layout()
     return fig
