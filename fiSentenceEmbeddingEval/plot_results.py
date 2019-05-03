@@ -9,10 +9,14 @@ def main():
     args = parse_args()
     df = load_results(args.resultdir)
     g = draw_plots(df, 'score_mean')
+    save_plot(g, os.path.join(args.resultdir, 'scores.svg'))
     save_plot(g, os.path.join(args.resultdir, 'scores.png'))
+    plt.close()
 
     g = draw_plots(df, 'train_duration_mean', 'Duration (s)')
+    save_plot(g, os.path.join(args.resultdir, 'duration.svg'))
     save_plot(g, os.path.join(args.resultdir, 'duration.png'))
+    plt.close()
 
 
 def load_results(resultdir):
