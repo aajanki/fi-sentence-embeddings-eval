@@ -16,29 +16,80 @@ abstract: >
 
 ## Introduction
 
-* sentence representation
-* Sentence embedding applications
-* Pre-training
-* Finnish
+A crucial component in most natural language processing applications
+is finding an expressive representation for text. Typically, sentences
+are mapped to numerical vectors which attempt to capture the semantic
+content of the text. If two sentences express a similar idea using
+different words, their representations should be similar to each
+other. Mathematically, a representation is constructed by embedding
+textual information into a low dimensional vector space.
 
-Most of the sentence representation research has so far focused on
-English. However, some researcher groups have published multi-lingual
-variants of their models. Such models are trained on documents written
-in dozens of different languages, and are able to generate sentence
-representations on all languages included in the training corpus.
-Pre-trained LASER and BERT models support Finnish.
+A good sentence representation would enhance the performance of many
+NLP applications. Comparing the meaning of snippets of text is a core
+component of web search engines. Machine translation systems use text
+representations as an "intermediate language" when translating between
+two human languages. Applications that automatically classify, tag or
+other wise organize text documents benefits from better a
+representation. With better representations it is possible to build
+applications that react more naturally to the sentiment and topic of
+written text.
 
-Most evaluations of the previously published multi-lingual models
-still emphasize the performance on English. One goal of this study is
-to present a more comprehensive evaluation on Finnish corpora.
+Researchers have studied many models for constructing sentence
+representations. Many researchers have published their pre-trained
+models open for anyone to use.
+
+Most of the research has so far focused mainly on the English language
+and other major languages. The purpose of this study is to present a
+more comprehensive evaluation on Finnish texts, and to see if models
+that are known to perform well on English also manage to maintain
+their edge on Finnish texts.
 
 ## Related work
 
-### Models
+### Sentence embedding models
 
-* TF-IDF bag-of-words
-* word embeddings based models: word2vec [@mikolov2013], fastText [@bojanowski2017], SIF [@arora2017], BOREP [@wieting2019]
-* contextual embeddings: BERT [@devlin2018], LASER [@artetxe2018]
+This section introduces the sentence embedding models that a compared
+in this study. I have selected models which have a pre-trained Finnish
+variant publicly available (or which require only minimal training).
+
+The most important sentence embedding models can be divided into three
+categories: baseline bag-of-word models, models that are based on
+merging embeddings for the individual words in a sentence, and models
+that process a full sentence at once.
+
+**Bag-of-words**. I'm using TF-IDF (term frequency-inverse document
+frequency) vectors as a baseline. A TF-IDF vector is a sparse vector
+with one dimension per each unique word in the vocabulary. The value
+is a count of a particular word in a sentence multiplied by a factor
+that is inversely proportional to the overall frequency of that word
+in the whole corpus. The latter factor is meant to diminish the effect
+of very common words which are unlikely to tell much about the actual
+content of the sentence.
+
+As a preprocessing, words are converted to their dictionary form
+(lemmatized) and all unigrams and bigrams occurring more than four
+times are selected. Typically (depending on the corpus) this results
+in dimensionality (vocabulary size) around 5000.
+
+**Pooled word embeddings**.
+
+* word2vec [@mikolov2013]
+* fastText [@bojanowski2017]
+* SIF [@arora2017]
+* BOREP [@wieting2019]
+
+**Contextula full sentence embeddings**.
+
+* BERT [@devlin2018]
+* LASER [@artetxe2018]
+
+Some researcher groups have published multi-lingual variants of their
+models. Such models are trained on documents written in dozens of
+different languages, and are able to generate sentence representations
+on all languages included in the training corpus. Pre-trained LASER
+and BERT models support Finnish.
+
+### Pre-training
 
 ### Transfer learning
 
@@ -98,6 +149,9 @@ training data, the pre-trained embedding models are not trained. The
 classifier parameters are learned on a development dataset for each
 task and embedding model separately. See the source code for the
 details.
+
+The source code is available at
+<https://github.com/aajanki/fi-sentence-embeddings-eval>
 
 ## Results
 
