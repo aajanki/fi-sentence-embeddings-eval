@@ -388,6 +388,11 @@ footer {
   padding-left: 50px;
 }
 
+.table-of-contents ul {
+    list-style-type: none;
+    padding: 0;
+}
+
 @media print, screen and (max-width: 960px) {
   div.wrapper {
     width: auto;

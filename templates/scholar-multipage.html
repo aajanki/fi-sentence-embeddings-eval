@@ -1,11 +1,12 @@
 <!doctype html>
 <!--
-Template created by Andrew G. York, based on this theme by Diana Mounter:
-https://github.com/broccolini/dinky, which mentioned that
-attribution is appreciated. Thanks, broccolini! -->
+Template created by Andrew G. York, with modifications by Antti
+Ajanki, based on this theme by Diana Mounter:
+https://github.com/broccolini/dinky, which mentioned that attribution
+is appreciated. Thanks, broccolini!
+-->
 <html lang="en">
 <head>
-  <base target="_blank"/>
   <meta charset="utf-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
@@ -111,6 +112,16 @@ $body$
 </div>
 </article>
 <footer>
+$if(section)$
+  <div class="table-of-contents">
+    <h3>Table of contents</h3>
+    <ul>
+$for(section)$
+      <li><a href="$section.href$">$section.title$<a></li>
+$endfor$
+    </ul>
+  </div>
+$endif$
   <p><small>Generated using <a href="https://github.com/pandoc-scholar/pandoc-scholar">pandoc scholar</a></small></p>
 </footer>
 </div>

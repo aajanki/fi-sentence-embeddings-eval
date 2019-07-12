@@ -33,18 +33,10 @@ TEX=$(SRC:.md=.tex)
 
 all:	$(HTML)
 
-pdf:	clean $(PDFS)
 html:	clean $(HTML)
-tex:	clean $(TEX)
 
 %.html:	%.md
-	pandoc -r $(OPTIONS) -w html  --template=templates/pandoc-scholar.html --css=templates/styles/pandoc-scholar.css --filter pandoc-citeproc --csl=csl/$(CSL).csl --bibliography=$(BIB) -o $@ $<
-
-%.tex:	%.md
-	pandoc -r $(OPTIONS) -w latex -s  --pdf-engine=pdflatex --template=templates/pandoc-scholar.latex --filter pandoc-citeproc --csl=csl/ajps.csl --bibliography=$(BIB) -o $@ $<
-
-%.pdf:	%.md
-	pandoc -r $(OPTIONS) -s  --pdf-engine=pdflatex --template=templates/pandoc-scholar.latex --filter pandoc-citeproc --csl=csl/$(CSL).csl --bibliography=$(BIB) -o $@ $<
+	pandoc -r $(OPTIONS) -w html  --template=templates/scholar-multipage.html --css=templates/styles/scholar-multipage.css --filter pandoc-citeproc --csl=csl/$(CSL).csl --bibliography=$(BIB) -o $@ $<
 
 clean:
-	rm -f *.html *.pdf *.tex
+	rm -f *.html
