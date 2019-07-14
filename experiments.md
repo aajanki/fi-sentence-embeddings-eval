@@ -1,8 +1,5 @@
 ---
 title: Experiments
-author:
-- name: Antti Ajanki
-  email: antti.ajanki@iki.fi
 section:
 - title: Results
   href: results.html
@@ -12,9 +9,7 @@ section:
   href: experiments.html
 ...
 
-## Related work
-
-### Sentence embedding models
+## Sentence embedding models
 
 This section introduces the sentence embedding models that a compared
 in this study. I have selected models which have a pre-trained Finnish
@@ -22,16 +17,17 @@ variant publicly available (or which require only minimal training).
 
 The most important sentence embedding models can be divided into three
 categories: baseline bag-of-word models, models that are based on
-merging embeddings for the individual words in a sentence, and models
-that process a full sentence at once.
+aggregating embeddings for the individual words in a sentence, and
+models that build a representation for a full sentence.
 
-**Bag-of-words**. I'm using TF-IDF (term frequency-inverse document
-frequency) vectors as a baseline. A TF-IDF vector is a sparse vector
-with one dimension per each unique word in the vocabulary. The value
-is a count of a particular word in a sentence multiplied by a factor
-that is inversely proportional to the overall frequency of that word
-in the whole corpus. The latter factor is meant to diminish the effect
-of very common words which are unlikely to tell much about the actual
+**Bag-of-words** (BoW). I'm using [TF-IDF (term frequency-inverse
+document frequency)](https://en.wikipedia.org/wiki/Tf%E2%80%93idf)
+vectors as a baseline. A TF-IDF vector is a sparse vector with one
+dimension per each unique word in the vocabulary. The value is a count
+of a particular word in a sentence multiplied by a factor that is
+inversely proportional to the overall frequency of that word in the
+whole corpus. The latter factor is meant to diminish the effect of
+very common words which are unlikely to tell much about the actual
 content of the sentence. The vectors are L2-normalized to reduce the
 effect of different sentence lengths.
 
@@ -40,12 +36,81 @@ As a preprocessing, words are converted to their dictionary form
 times are selected. Typically (depending on the corpus) this results
 in dimensionality (vocabulary size) around 5000.
 
-**Pooled word embeddings**.
+BoW models treat each word as a homogenous entity. They don't consider
+the semantic similarity of words. A BoW model doesn't understand that
+a *horse* and a *pony* are more similar than a *horse* and a *shovel*.
+Next, we'll move on to word embedding models that have been proposed
+to include semantic information.
 
-* word2vec [@mikolov2013]
-* fastText [@bojanowski2017]
-* SIF [@arora2017]
-* BOREP [@wieting2019]
+**Pooled word embeddings**. A [word
+embedding](https://en.wikipedia.org/wiki/Word_embedding) is a vector
+representation of a word. Words, which often occur in similar context
+(a *horse* and a *pony*), are assigned vector that are close by each
+other and words, which rarely occur in a similar context (a *horse*
+and a *shovel*), dissimilar vectors. The embedding vectors are dense
+fixed-sized relatively low dimensional (typically 50-300 dimensions)
+vectors.
+
+The embedding vectors are typically trained on a language modeling
+task: predict the presentation for a word given the representation of
+a few previous (or previous and following) words. This is unsupervised
+or, rather, self-supervised task as the supervision signal is the
+order of the word in a document. The training requires just a large
+corpus of text documents. It is well established that word embeddings
+learned on a language modeling task generalize well to other
+downstream tasks: classification, part-of-speech tagging and so on.
+
+One of the earliest and still widely used word embedding model is the
+word2vec model [@mikolov2013]. I'm using the Finnish word2vec vectors
+trained on the [Finnish Internet
+Parsebank](https://turkunlp.org/finnish_nlp.html#parsebank) data by
+the [Turku NLP research group](https://turkunlp.org/). FastText
+[@bojanowski2017] extended the idea by generating embeddings for
+subword units (character n-grams). By utilizing the subword structure,
+FastText aims to provide better embeddings for rare and
+out-of-vocabulary words. The authors of FastText have published a
+Finnish model trained on Finnish subsets of [Common
+Crawl](http://commoncrawl.org/) and
+[Wikipedia](https://www.wikipedia.org/).
+
+There are several ways to get from word representations to sentence
+representations. Perhaps, the most straight-forward idea is to
+aggregate the embeddings of each word that appears in a sentence, for
+example, by taking an element-wise average, minimum or maximum. These
+strategies are called average-pooling, min-pooling and max-pooling,
+respectively. Still another alternative is the concatenation of min-
+and max-pooled vectors. In this work, I'm comparing average-pooled
+word2vec and FastText models. Average-pooling performed better than
+the alternatives on a brief preliminary study on the TDT dataset. As
+this might be dataset-dependent, it's a good idea to experiment with
+different pooling strategies.
+
+Some researchers have proposed slightly more advanced aggregation
+methods that still require little or no training. I'm evaluating two
+such proposals here.
+
+[@arora2017] introduced a model called smooth inverse frequency (SIF).
+They propose taking a weighted average (weighted by a term related to
+the inverse document frequency) of the word embedding in a sentence
+and then removing the projection of the first singular vector. This is
+derived from an assumption that the sentence has been generated by a
+random walk of a discourse vector on a latent word embedding space,
+and by including smoothing terms for frequent words.
+
+The idea of BOREP or bag-of-random-embedding-projections
+[@wieting2019] is to project word embeddings to a random
+high-dimensional space and pool the projections there. The intuition
+is that casting things into a higher dimensional space tends to make
+them more likely to be linearly separable thus making the text
+classification easier. In the evaluations, I'm projecting to a
+4096-dimensional space following the lead of the paper authors.
+
+While word embeddings capture some aspects of semantics, pooling
+embeddings is quite a crude way of aggregating the meaning of a
+sentence. The current state-of-the-art in NLP are deep learning models
+that take a whole sentence as an input and are thus capable of
+processing the full context of the sentece. Let's take a look at two
+such models.
 
 **Contextual full sentence embeddings**.
 
@@ -64,7 +129,7 @@ and BERT models support Finnish.
 
 ### Feature extraction vs tuning
 
-## Experiments
+## Evaluation tasks
 
 The models were compared on the following Finnish sentence
 classification tasks:
