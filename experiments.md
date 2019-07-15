@@ -9,6 +9,50 @@ section:
   href: experiments.html
 ...
 
+## Sentence classifier architecture
+
+The evaluation tasks are either sentence classification tasks (given a
+sentence output the class it belongs to) or sentence pair comparison
+tasks (given a pair of sentences output a binary yes/no judgment: are
+the two sentences paraphrases or do they belong to the same document).
+
+The evaluation architecture for the single sentence tasks is as
+follows: the sentence embedding model under evaluation converts the
+sentence text into a sentence embedding vector that is used as input
+layer to a dense neural network consisting of one hidden layer and a
+softmax output layer. The classifier part is trained on the
+development dataset (separately for each task and embedding model) but
+the pre-trained sentence embedding model is keep fixed during the
+whole experiment.
+
+For sentence pair tasks, I'm using a technique introduced
+by [@tai2015]: first, sentence embeddings are generated for the two
+sentences separately, and then they are merged into a single feature
+vector that represents the pair. Let the embeddings for the two
+sentences be called $u$ and $v$. The feature vector for the pair is
+then generated as a concatenation of the elementwise product $u \odot v$
+and the elementwise absolute distance $|u-v|$. The concatenated
+feature vector is then used as the input for the classification part,
+like above. The BERT model is an exception. It has an integrated way
+of handling sentence pair tasks (see below).
+
+The pre-trained sentence embedding models are treated as black box
+feature extractors that output embedding vectors. An alternative
+approach is to fine-tune a pre-trained embedding model by optimizing
+the full pipeline (usually with a small learning rate for the
+embedding part). Feature extraction is computationally cheaper, but
+fine-tuning better adapts pre-trained representations to many
+different tasks. The relative performance of feature extraction and
+fine-tuning approaches depends on the similarity of the pre-training
+and target tasks [@peters2019] and is worth more careful study. The
+current evaluation focuses only on the feature extraction to
+understand what can be expected on relatively low computational
+resources.
+
+### Pre-training
+
+### Transfer learning
+
 ## Sentence embedding models
 
 This section introduces the sentence embedding models that a compared
@@ -34,7 +78,7 @@ effect of different sentence lengths.
 As a preprocessing, words are converted to their dictionary form
 (lemmatized) and all unigrams and bigrams occurring more than four
 times are selected. Typically (depending on the corpus) this results
-in dimensionality (vocabulary size) around 5000.
+in dimensionality (i.e. the vocabulary size) around 5000.
 
 BoW models treat each word as a homogenous entity. They don't consider
 the semantic similarity of words. A BoW model doesn't understand that
@@ -103,31 +147,46 @@ high-dimensional space and pool the projections there. The intuition
 is that casting things into a higher dimensional space tends to make
 them more likely to be linearly separable thus making the text
 classification easier. In the evaluations, I'm projecting to a
-4096-dimensional space following the lead of the paper authors.
+4096 dimensional space following the lead of the paper authors.
 
 While word embeddings capture some aspects of semantics, pooling
 embeddings is quite a crude way of aggregating the meaning of a
 sentence. The current state-of-the-art in NLP are deep learning models
 that take a whole sentence as an input and are thus capable of
-processing the full context of the sentece. Let's take a look at two
+processing the full context of the sentence. Let's take a look at two
 such models.
 
-**Contextual full sentence embeddings**.
+**Contextual full sentence embeddings**. BERT (Bidirectional Encoder
+Representations from Transformers) [@devlin2018] processes a full
+sentence to generate a sentence embeddings. It uses self-attention to
+decide the relevant context for each word in the sentence. Another
+major technical contribution in the model was a bi-directional
+transformer architecture, which allows the model to consider word's
+left and right context when making predictions.
 
-* BERT [@devlin2018]
-* LASER [@artetxe2018]
+In the evaluation, I'll use the value of the second-to-last hidden
+layer for the special \[CLS\] token as the sentence embedding. BERT is
+trained to aggregate information about the whole sequence to the
+\[CLS\] token in classification tasks. I have selected the
+second-to-last hidden layer because both the paper and my brief
+preliminary study showed that it gives slightly better classification
+performance than the \[CLS\] output layer. BERT also produces output
+embeddings for each word, but these are not used in the evaluations.
+In the paraphrase and consecutive sentence evaluation tasks that
+directly compare two sentences, both sentences are fed as input
+separated by a separator token to match how BERT was trained.
 
-Some researcher groups have published multi-lingual variants of their
-models. Such models are trained on documents written in dozens of
-different languages, and are able to generate sentence representations
-on all languages included in the training corpus. Pre-trained LASER
-and BERT models support Finnish.
+I'm using the pre-trained multilingual (Bert-base, multilingual cased)
+variant published by the BERT authors. It has been trained on 104
+languages, including Finnish. The embedding dimensionality is 768.
 
-### Pre-training
-
-### Transfer learning
-
-### Feature extraction vs tuning
+As the second contextual sentence embedding method, I'll evaluate
+LASER (Language-Agnostic SEntence Representations) by [@artetxe2018].
+It is specifically meant to learn language-agnostic sentence
+embeddings. It has a similar deep bi-directional architecture as BERT,
+but uses LSTM encoders instead of transformer blocks like BERT. I'm
+using the pre-trained model published by the LASER authors. It
+produces 1024 dimensional embedding vectors.
 
 ## Evaluation tasks
 
@@ -174,18 +233,6 @@ sentences extracted from many sources: blogs, Wikinews, Europarl,
 student magazine articles, etc. The task is to predict the source of a
 sentence. There are 8 classes, and about 8000 training and 1000 test
 sentences. The evaluation measure is the F1 score.
-
-### Classifier architecture
-
-The embeddings from a given model are used as an input for a single
-hidden layer neural network classifier. The classifier is trained on
-training data, the pre-trained embedding models are not trained. The
-classifier parameters are learned on a development dataset for each
-task and embedding model separately. See the source code for the
-details.
-
-The source code is available at
-<https://github.com/aajanki/fi-sentence-embeddings-eval>
 
 ## References
 \setlength{\parindent}{-0.2in}
