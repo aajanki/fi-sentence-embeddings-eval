@@ -1,5 +1,5 @@
 ---
-title: Experiments
+title: Sentence embedding models
 section:
 - title: Results
   href: results.html
@@ -7,9 +7,12 @@ section:
   href: sentemb.html
 - title: Evaluation tasks
   href: tasks.html
-- title: Experiments
-  href: experiments.html
+- title: Embedding models
+  href: models.html
 ...
+
+This page introduces the sentence embedding models that are evaluated
+and the evaluation architecture.
 
 ## Sentence classifier architecture
 

@@ -7,8 +7,8 @@ section:
   href: sentemb.html
 - title: Evaluation tasks
   href: tasks.html
-- title: Experiments
-  href: experiments.html
+- title: Embedding models
+  href: models.html
 ...
 
 The models were compared on the following Finnish sentence

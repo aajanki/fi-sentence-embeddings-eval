@@ -7,8 +7,8 @@ section:
   href: sentemb.html
 - title: Evaluation tasks
   href: tasks.html
-- title: Experiments
-  href: experiments.html
+- title: Embedding models
+  href: models.html
 ...
 
 I compared the performance of a few sentence classification algorithms
@@ -30,7 +30,7 @@ The classification models can be divided in three groups:
 These models have been shown to perform well on English text. The aim
 of this investigation is to see how well they (or their multilingual
 variant) perform on Finnish material. A more detailed description of
-the models is given on [the experiments page](experiments.html).
+the models is given on [the separate page](models.html).
 
 The evaluation results are shown below:
 

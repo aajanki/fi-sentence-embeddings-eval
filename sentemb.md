@@ -11,8 +11,8 @@ section:
   href: sentemb.html
 - title: Evaluation tasks
   href: tasks.html
-- title: Experiments
-  href: experiments.html
+- title: Embedding models
+  href: models.html
 abstract: >
   This study compares commonly used pre-trained NLP sentence
   representation models on the Finnish language. The selected models are
