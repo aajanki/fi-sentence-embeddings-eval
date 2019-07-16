@@ -16,22 +16,31 @@ sentence output the class it belongs to) or sentence pair comparison
 tasks (given a pair of sentences output a binary yes/no judgment: are
 the two sentences paraphrases or do they belong to the same document).
 
-The evaluation architecture for the single sentence tasks is as
-follows: the sentence embedding model under evaluation converts the
-sentence text into a sentence embedding vector that is used as input
-layer to a dense neural network consisting of one hidden layer and a
-softmax output layer. The classifier part is trained on the
-development dataset (separately for each task and embedding model) but
-the pre-trained sentence embedding model is keep fixed during the
-whole experiment.
+The architecture used in the evaluations is show on the image below.
+The sentence embedding model under evaluation (the blue block)
+converts the sentence text into a sentence embedding vector which is
+an input for a task-specific classifier (orange blocks). The
+classifier consists of a dense hidden layer with a sigmoid activation
+and a softmax output layer. Both layers are regularized by dropout.
+The dimensionality, weights and dropout probabilities of the
+classifier are trained on the development dataset (separately for each
+task and embedding model) but the pre-trained sentence embedding model
+is keep fixed during the whole experiment.
 
-For sentence pair tasks, I'm using a technique introduced
-by [@tai2015]: first, sentence embeddings are generated for the two
-sentences separately, and then they are merged into a single feature
-vector that represents the pair. Let the embeddings for the two
+![Architecture for a) sentence classification and b) sentence pair
+classification evaluation tasks. The blue block is one of the
+pre-trained sentence embedding models. Orange blocks form the
+classifier, which is optimized for each
+task.](images/sentence_classifier.png)
+
+For sentence pair tasks (labeled as b) in the image), I'm using a
+technique introduced by [@tai2015]: first, sentence embeddings are
+generated for the two sentences separately, and then they are merged
+into a single feature vector that represents the pair (green blocks).
+The merging is done as follows: Let the embeddings for the two
 sentences be called $u$ and $v$. The feature vector for the pair is
-then generated as a concatenation of the elementwise product $u \odot v$
-and the elementwise absolute distance $|u-v|$. The concatenated
+then generated as a concatenation of the element-wise product $u \odot
+v$ and the element-wise absolute distance $|u-v|$. The concatenated
 feature vector is then used as the input for the classification part,
 like above. The BERT model is an exception. It has an integrated way
 of handling sentence pair tasks (see below).
@@ -131,7 +140,7 @@ different pooling strategies.
 
 Some researchers have proposed slightly more advanced aggregation
 methods that still require little or no training. I'm evaluating two
-such proposals here.
+such proposals here: SIF and BOREP.
 
 [@arora2017] introduced a model called smooth inverse frequency (SIF).
 They propose taking a weighted average (weighted by a term related to
