@@ -5,6 +5,8 @@ section:
   href: results.html
 - title: Sentence embeddings
   href: sentemb.html
+- title: Evaluation tasks
+  href: tasks.html
 - title: Experiments
   href: experiments.html
 ...
@@ -17,7 +19,7 @@ datasets. In two cases the task was to assign a class for a sentence
 (Eduskunta-VKK, TDT categories), in one case to detect if two
 sentences are consecutive or not (Ylilauta), and in one the task was
 to identify if two sentences are paraphrases (Opusparcus). See [the
-experiments page](experiments.html) for further details.
+task page](tasks.html) for further details.
 
 The classification models can be divided in three groups:
 
