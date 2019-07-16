@@ -14,7 +14,7 @@ section:
 I compared the performance of a few sentence classification algorithms
 on the Finnish language.
 
-The evaluation consisted of four classification tasks on four separate
+The evaluation consisted of four classification tasks on four
 datasets. In two cases the task was to assign a class for a sentence
 (Eduskunta-VKK, TDT categories), in one case to detect if two
 sentences are consecutive or not (Ylilauta), and in one the task was
@@ -29,12 +29,8 @@ The classification models can be divided in three groups:
 
 These models have been shown to perform well on English text. The aim
 of this investigation is to see how well they (or their multilingual
-variant, to be more precise) perform on Finnish material. Only models
-with publicly available pre-trained Finnish or multilingual
-implementation are included. This means that some state-of-the-art
-models without a multilingual variant, such as GPT-2 and XLNet, are
-not included in this evaluation. A more detailed description of the
-models is given on [the experiments page](experiments.html).
+variant) perform on Finnish material. A more detailed description of
+the models is given on [the experiments page](experiments.html).
 
 The evaluation results are shown below:
 

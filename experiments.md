@@ -66,25 +66,30 @@ resources.
 
 ## Sentence embedding models
 
-This section introduces the sentence embedding models that a compared
-in this study. I have selected models which have a pre-trained Finnish
-variant publicly available (or which require only minimal training).
+This section introduces the sentence embedding models that are
+compared in this study. I have selected models which have a
+pre-trained Finnish variant publicly available (or which require only
+minimal training). State-of-the-art models without a published Finnish
+or multilingual variant, such as GPT-2 and XLNet, are not included in
+the evaluation.
 
 The most important sentence embedding models can be divided into three
 categories: baseline bag-of-word models, models that are based on
 aggregating embeddings for the individual words in a sentence, and
 models that build a representation for a full sentence.
 
-**Bag-of-words** (BoW). I'm using [TF-IDF (term frequency-inverse
-document frequency)](https://en.wikipedia.org/wiki/Tf%E2%80%93idf)
-vectors as a baseline. A TF-IDF vector is a sparse vector with one
-dimension per each unique word in the vocabulary. The value is a count
-of a particular word in a sentence multiplied by a factor that is
-inversely proportional to the overall frequency of that word in the
-whole corpus. The latter factor is meant to diminish the effect of
-very common words which are unlikely to tell much about the actual
-content of the sentence. The vectors are L2-normalized to reduce the
-effect of different sentence lengths.
+### Bag-of-words (BoW)
+
+I'm using **TF-IDF** (term frequency-inverse document frequency)
+vectors as a baseline. A
+[TF-IDF](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) vector is a
+sparse vector with one dimension per each unique word in the
+vocabulary. The value is a count of a particular word in a sentence
+multiplied by a factor that is inversely proportional to the overall
+frequency of that word in the whole corpus. The latter factor is meant
+to diminish the effect of very common words which are unlikely to tell
+much about the actual content of the sentence. The vectors are
+L2-normalized to reduce the effect of different sentence lengths.
 
 As a preprocessing, words are converted to their dictionary form
 (lemmatized) and all unigrams and bigrams occurring more than four
@@ -97,14 +102,15 @@ a *horse* and a *pony* are more similar than a *horse* and a *shovel*.
 Next, we'll move on to word embedding models that have been proposed
 to include semantic information.
 
-**Pooled word embeddings**. A [word
-embedding](https://en.wikipedia.org/wiki/Word_embedding) is a vector
-representation of a word. Words, which often occur in similar context
-(a *horse* and a *pony*), are assigned vector that are close by each
-other and words, which rarely occur in a similar context (a *horse*
-and a *shovel*), dissimilar vectors. The embedding vectors are dense
-fixed-sized relatively low dimensional (typically 50-300 dimensions)
-vectors.
+### Pooled word embeddings
+
+A [word embedding](https://en.wikipedia.org/wiki/Word_embedding) is a
+vector representation of a word. Words, which often occur in similar
+context (a *horse* and a *pony*), are assigned vector that are close
+by each other and words, which rarely occur in a similar context (a
+*horse* and a *shovel*), dissimilar vectors. The embedding vectors are
+dense fixed-sized relatively low dimensional (typically 50-300
+dimensions) vectors.
 
 The embedding vectors are typically trained on a language modeling
 task: predict the presentation for a word given the representation of
@@ -116,10 +122,10 @@ learned on a language modeling task generalize well to other
 downstream tasks: classification, part-of-speech tagging and so on.
 
 One of the earliest and still widely used word embedding model is the
-word2vec model [@mikolov2013]. I'm using the Finnish word2vec vectors
-trained on the [Finnish Internet
+**word2vec** model [@mikolov2013]. I'm using the Finnish word2vec
+vectors trained on the [Finnish Internet
 Parsebank](https://turkunlp.org/finnish_nlp.html#parsebank) data by
-the [Turku NLP research group](https://turkunlp.org/). FastText
+the [Turku NLP research group](https://turkunlp.org/). **FastText**
 [@bojanowski2017] extended the idea by generating embeddings for
 subword units (character n-grams). By utilizing the subword structure,
 FastText aims to provide better embeddings for rare and
@@ -144,7 +150,7 @@ Some researchers have proposed slightly more advanced aggregation
 methods that still require little or no training. I'm evaluating two
 such proposals here: SIF and BOREP.
 
-[@arora2017] introduced a model called smooth inverse frequency (SIF).
+[@arora2017] introduced a model called smooth inverse frequency (**SIF**).
 They propose taking a weighted average (weighted by a term related to
 the inverse document frequency) of the word embedding in a sentence
 and then removing the projection of the first singular vector. This is
@@ -152,13 +158,13 @@ derived from an assumption that the sentence has been generated by a
 random walk of a discourse vector on a latent word embedding space,
 and by including smoothing terms for frequent words.
 
-The idea of BOREP or bag-of-random-embedding-projections
+The idea of **BOREP** or bag-of-random-embedding-projections
 [@wieting2019] is to project word embeddings to a random
 high-dimensional space and pool the projections there. The intuition
 is that casting things into a higher dimensional space tends to make
 them more likely to be linearly separable thus making the text
-classification easier. In the evaluations, I'm projecting to a
-4096 dimensional space following the lead of the paper authors.
+classification easier. In the evaluations, I'm projecting to a 4096
+dimensional space following the lead of the paper authors.
 
 While word embeddings capture some aspects of semantics, pooling
 embeddings is quite a crude way of aggregating the meaning of a
@@ -167,13 +173,15 @@ that take a whole sentence as an input and are thus capable of
 processing the full context of the sentence. Let's take a look at two
 such models.
 
-**Contextual full sentence embeddings**. BERT (Bidirectional Encoder
-Representations from Transformers) [@devlin2018] processes a full
-sentence to generate a sentence embeddings. It uses self-attention to
-decide the relevant context for each word in the sentence. Another
-major technical contribution in the model was a bi-directional
-transformer architecture, which allows the model to consider word's
-left and right context when making predictions.
+### Contextual full sentence embeddings
+
+**BERT** (Bidirectional Encoder Representations from Transformers)
+[@devlin2018] processes a full sentence to generate a sentence
+embeddings. It uses self-attention to decide the relevant context for
+each word in the sentence. Another major technical contribution in the
+model was a bi-directional transformer architecture, which allows the
+model to consider word's left and right context when making
+predictions.
 
 In the evaluation, I'll use the value of the second-to-last hidden
 layer for the special \[CLS\] token as the sentence embedding. BERT is
@@ -192,12 +200,12 @@ variant published by the BERT authors. It has been trained on 104
 languages, including Finnish. The embedding dimensionality is 768.
 
 As the second contextual sentence embedding method, I'll evaluate
-LASER (Language-Agnostic SEntence Representations) by [@artetxe2018].
-It is specifically meant to learn language-agnostic sentence
-embeddings. It has a similar deep bi-directional architecture as BERT,
-but uses LSTM encoders instead of transformer blocks like BERT. I'm
-using the pre-trained model published by the LASER authors. It
-produces 1024 dimensional embedding vectors.
+**LASER** (Language-Agnostic SEntence Representations) by
+[@artetxe2018]. It is specifically meant to learn language-agnostic
+sentence embeddings. It has a similar deep bi-directional architecture
+as BERT, but uses LSTM encoders instead of transformer blocks like
+BERT. I'm using the pre-trained model published by the LASER authors.
+It produces 1024 dimensional embedding vectors.
 
 ## References
 \setlength{\parindent}{-0.2in}
