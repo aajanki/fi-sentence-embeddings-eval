@@ -22,7 +22,7 @@ the two sentences paraphrases or do they belong to the same document).
 The architecture used in the evaluations is show on the image below.
 The sentence embedding model under evaluation (the blue block)
 converts the sentence text into a sentence embedding vector which is
-an input for a task-specific classifier (orange blocks). The
+an input for a task-specific classifier (the orange blocks). The
 classifier consists of a dense hidden layer with a sigmoid activation
 and a softmax output layer. Both layers are regularized by dropout.
 The dimensionality, weights and dropout probabilities of the
@@ -31,22 +31,23 @@ task and embedding model) but the pre-trained sentence embedding model
 is keep fixed during the whole experiment.
 
 ![Architecture for a) sentence classification and b) sentence pair
-classification evaluation tasks. The blue block is one of the
-pre-trained sentence embedding models. Orange blocks form the
-classifier, which is optimized for each
-task.](images/sentence_classifier.png)
+classification tasks. The blue blocks are the pre-trained sentence
+embedding models under study. Their parameters are kept fixed. The
+orange blocks form the classifier, which is optimized for each task.
+The green blocks are fixed vector
+operators.](images/sentence_classifier.png)
 
 For sentence pair tasks (labeled as b) in the image), I'm using a
 technique introduced by [@tai2015]: first, sentence embeddings are
 generated for the two sentences separately, and then they are merged
-into a single feature vector that represents the pair (green blocks).
-The merging is done as follows: Let the embeddings for the two
-sentences be called $u$ and $v$. The feature vector for the pair is
-then generated as a concatenation of the element-wise product $u \odot
-v$ and the element-wise absolute distance $|u-v|$. The concatenated
-feature vector is then used as the input for the classification part,
-like above. The BERT model is an exception. It has an integrated way
-of handling sentence pair tasks (see below).
+into a single feature vector that represents the pair (the green
+blocks). The merging is done as follows: Let the embeddings for the
+two sentences be called $u$ and $v$. The feature vector for the pair
+is then generated as a concatenation of the element-wise product $u
+\odot v$ and the element-wise absolute distance $|u-v|$. The
+concatenated feature vector is then used as the input for the
+classification part, like above. The BERT model is an exception. It
+has an integrated way of handling sentence pair tasks (see below).
 
 The pre-trained sentence embedding models are treated as black box
 feature extractors that output embedding vectors. An alternative
@@ -60,10 +61,6 @@ and target tasks [@peters2019] and is worth more careful study. The
 current evaluation focuses only on the feature extraction to
 understand what can be expected on relatively low computational
 resources.
-
-### Pre-training
-
-### Transfer learning
 
 ## Sentence embedding models
 
@@ -81,16 +78,17 @@ models that build a representation for a full sentence.
 
 ### Bag-of-words (BoW)
 
-I'm using **TF-IDF** (term frequency-inverse document frequency)
-vectors as a baseline. A
-[TF-IDF](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) vector is a
-sparse vector with one dimension per each unique word in the
-vocabulary. The value is a count of a particular word in a sentence
-multiplied by a factor that is inversely proportional to the overall
-frequency of that word in the whole corpus. The latter factor is meant
-to diminish the effect of very common words which are unlikely to tell
-much about the actual content of the sentence. The vectors are
-L2-normalized to reduce the effect of different sentence lengths.
+**TF-IDF**. I'm using
+[TF-IDF](https://en.wikipedia.org/wiki/Tf%E2%80%93idf) (term
+frequency-inverse document frequency) vectors as a baseline. A TF-IDF
+vector is a sparse vector with one dimension per each unique word in
+the vocabulary. The value is a count of a particular word in a
+sentence multiplied by a factor that is inversely proportional to the
+overall frequency of that word in the whole corpus. The latter factor
+is meant to diminish the effect of very common words which are
+unlikely to tell much about the actual content of the sentence. The
+vectors are L2-normalized to reduce the effect of different sentence
+lengths.
 
 As a preprocessing, words are converted to their dictionary form
 (lemmatized) and all unigrams and bigrams occurring more than four
@@ -115,51 +113,55 @@ dimensions) vectors.
 
 The embedding vectors are typically trained on a language modeling
 task: predict the presentation for a word given the representation of
-a few previous (or previous and following) words. This is unsupervised
-or, rather, self-supervised task as the supervision signal is the
-order of the word in a document. The training requires just a large
-corpus of text documents. It is well established that word embeddings
-learned on a language modeling task generalize well to other
-downstream tasks: classification, part-of-speech tagging and so on.
+a few previous (or previous and following) words. This is a
+self-supervised task as the supervision signal is the order of the
+word in a document. The training requires just a large corpus of text
+documents. It is well established that word embeddings learned on a
+language modeling task generalize well to other downstream tasks:
+classification, part-of-speech tagging and so on.
 
-One of the earliest and still widely used word embedding model is the
-**word2vec** model [@mikolov2013]. I'm using the Finnish word2vec
-vectors trained on the [Finnish Internet
+**Pooled word2vec**. One of the earliest and still widely used word
+embedding model is the word2vec model [@mikolov2013]. I'm using the
+Finnish word2vec vectors trained on the [Finnish Internet
 Parsebank](https://turkunlp.org/finnish_nlp.html#parsebank) data by
-the [Turku NLP research group](https://turkunlp.org/). **FastText**
-[@bojanowski2017] extended the idea by generating embeddings for
-subword units (character n-grams). By utilizing the subword structure,
-FastText aims to provide better embeddings for rare and
-out-of-vocabulary words. The authors of FastText have published a
-Finnish model trained on Finnish subsets of [Common
-Crawl](http://commoncrawl.org/) and
-[Wikipedia](https://www.wikipedia.org/).
+the [Turku NLP research group](https://turkunlp.org/). The published
+embeddings are 300 dimensional.
 
-There are several ways to get from word representations to sentence
-representations. Perhaps, the most straight-forward idea is to
-aggregate the embeddings of each word that appears in a sentence, for
-example, by taking an element-wise average, minimum or maximum. These
-strategies are called average-pooling, min-pooling and max-pooling,
-respectively. Still another alternative is the concatenation of min-
-and max-pooled vectors. In this work, I'm comparing average-pooled
-word2vec and FastText models. Average-pooling performed better than
-the alternatives on a brief preliminary study on the TDT dataset. As
-this might be dataset-dependent, it's a good idea to experiment with
-different pooling strategies.
+There are several ways to get from the word representations to
+sentence representations. Perhaps, the most straight-forward idea is
+to aggregate the embeddings of each word that appears in a sentence,
+for example, by taking an element-wise average, minimum or maximum.
+These strategies are called average-pooling, min-pooling and
+max-pooling, respectively. Still another alternative is the
+concatenation of min- and max-pooled vectors. In this work, I'm
+evaluating average-pooled word2vec. Average-pooling performed better
+than the alternatives on a brief preliminary study on the TDT dataset.
+As this might be dataset-dependent, it's a good idea to experiment
+with different pooling strategies.
+
+**Pooled FastText** [@bojanowski2017] extended the word2vec by
+generating embeddings for subword units (character n-grams). By
+utilizing the subword structure, FastText aims to provide better
+embeddings for rare and out-of-vocabulary words. It should also help
+on morpheme-rich languages like Finnish (lots of inflections). The
+authors of FastText have published a Finnish model trained on Finnish
+subsets of [Common Crawl](http://commoncrawl.org/) and
+[Wikipedia](https://www.wikipedia.org/). I'm using average-pooling to
+aggregate the FastText embeddings of the words in a sentence.
 
 Some researchers have proposed slightly more advanced aggregation
 methods that still require little or no training. I'm evaluating two
 such proposals here: SIF and BOREP.
 
-[@arora2017] introduced a model called smooth inverse frequency (**SIF**).
-They propose taking a weighted average (weighted by a term related to
-the inverse document frequency) of the word embedding in a sentence
-and then removing the projection of the first singular vector. This is
-derived from an assumption that the sentence has been generated by a
-random walk of a discourse vector on a latent word embedding space,
-and by including smoothing terms for frequent words.
+**SIF**. [@arora2017] introduced a model called smooth inverse
+frequency (SIF). They propose taking a weighted average (weighted by a
+term related to the inverse document frequency) of the word embedding
+in a sentence and then removing the projection of the first singular
+vector. This is derived from an assumption that the sentence has been
+generated by a random walk of a discourse vector on a latent word
+embedding space, and by including smoothing terms for frequent words.
 
-The idea of **BOREP** or bag-of-random-embedding-projections
+**BOREP**. The idea of BOREP or bag-of-random-embedding-projections
 [@wieting2019] is to project word embeddings to a random
 high-dimensional space and pool the projections there. The intuition
 is that casting things into a higher dimensional space tends to make
@@ -185,23 +187,24 @@ model to consider word's left and right context when making
 predictions.
 
 In the evaluation, I'll use the value of the second-to-last hidden
-layer for the special \[CLS\] token as the sentence embedding. BERT is
-trained to aggregate information about the whole sequence to the
-\[CLS\] token in classification tasks. I have selected the
-second-to-last hidden layer because both the paper and my brief
-preliminary study showed that it gives slightly better classification
-performance than the \[CLS\] output layer. BERT also produces output
-embeddings for each word, but these are not used in the evaluations.
-In the paraphrase and consecutive sentence evaluation tasks that
-directly compare two sentences, both sentences are fed as input
-separated by a separator token to match how BERT was trained.
+layer of a special \[CLS\] token as the final sentence embedding. BERT
+is trained to aggregate information about the whole sequence on the
+layers corresponding to the \[CLS\] token on classification tasks. I
+have selected the second-to-last hidden layer because both the paper
+and my brief preliminary study showed that it gives slightly better
+classification performance than the output layer of the \[CLS\] token.
+BERT also generates output embeddings for each input word, but these
+are not used in the evaluations. In the paraphrase and consecutive
+sentence evaluation tasks that directly compare two sentences, both
+sentences are fed as input separated by a separator token to match how
+BERT was trained.
 
 I'm using the pre-trained multilingual (Bert-base, multilingual cased)
 variant published by the BERT authors. It has been trained on 104
 languages, including Finnish. The embedding dimensionality is 768.
 
-As the second contextual sentence embedding method, I'll evaluate
-**LASER** (Language-Agnostic SEntence Representations) by
+**LASER**. As the second contextual sentence embedding method, I'll
+evaluate LASER (Language-Agnostic SEntence Representations) by
 [@artetxe2018]. It is specifically meant to learn language-agnostic
 sentence embeddings. It has a similar deep bi-directional architecture
 as BERT, but uses LSTM encoders instead of transformer blocks like
