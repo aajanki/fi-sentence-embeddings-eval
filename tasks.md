@@ -3,8 +3,6 @@ title: Evaluation tasks
 section:
 - title: Results
   href: results.html
-- title: Sentence embeddings
-  href: sentemb.html
 - title: Evaluation tasks
   href: tasks.html
 - title: Embedding models
