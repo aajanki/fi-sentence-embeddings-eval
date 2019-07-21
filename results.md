@@ -4,7 +4,7 @@ author:
 - Antti Ajanki:
   name: Antti Ajanki
   email: antti.ajanki@iki.fi
-  correspondence: "yes"
+date: 21.7.2019
 section:
 - title: Results
   href: results.html

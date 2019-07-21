@@ -26,10 +26,7 @@ CSL = apsa
 ## Pandoc options to use
 OPTIONS = markdown+simple_tables+table_captions+yaml_metadata_block+smart
 
-PDFS=$(SRC:.md=.pdf)
 HTML=$(SRC:.md=.html)
-TEX=$(SRC:.md=.tex)
-
 
 all:	$(HTML)
 

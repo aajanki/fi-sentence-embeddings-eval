@@ -78,7 +78,7 @@ $endif$
 <p class="author-list">
 $for(author)$
   $if(author.last)$and $endif$<span property="author" typeof="Person">
-    $author.name$</span><sup>$if(author.correspondence)$$if(author.email)$<a href="mailto:$author.email$">✉</a> $endif$$endif$$for(author.institute_indices)$$author.institute_indices$$sep$,$endfor$$if(author.equal_contributor)$,$if(equal_contributor_symbol)$$equal_contributor_symbol$$else$*$endif$$endif$</sup>$sep$,
+    $author.name$</span>$if(author.email)$, <a href="mailto:$author.email$">$author.email$</a>$endif$$sep$,
 $endfor$
 </p>
 <div class="author_affiliations">
@@ -101,6 +101,7 @@ $endfor$
 </div>
 $if(abstract)$<p class="abstract" property="description">$abstract$</p>$endif$
 $if(doi)$<p><a href="https://doi.org/$doi$">doi: $doi$</a></p>$endif$
+$if(date)$<p>$date$</p>$endif$
 
 $for(include-before)$
 $include-before$
