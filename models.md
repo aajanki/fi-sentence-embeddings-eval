@@ -40,7 +40,7 @@ based on embeddings. With better representations it is possible to
 build applications that react more naturally to the sentiment and
 topic of written text.
 
-## Sentence embedding models
+## Evaluated sentence embedding models
 
 This study compares sentence embedding models which have a pre-trained
 Finnish variant publicly available. State-of-the-art models without a

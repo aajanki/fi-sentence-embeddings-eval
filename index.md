@@ -46,10 +46,17 @@ of this investigation is to see how well they (or their multilingual
 variants) perform on the Finnish language. A more detailed description
 of the models is given on [the embedding models page](models.html).
 
-The evaluation results are shown below:
+The performance of the sentence classification models (the colored
+bars) on the evaluation tasks (the four panels) is shown below. The
+models are evaluated on test data not seen during the training. The
+presented accuracy scores are averages over three random
+initialization.
 
 ![Performance of the evaluated models (the colored bars) on the
 evaluation tasks (the four panels)](images/scores.svg)
+
+You can download the results in the [CSV format from
+here](https://github.com/aajanki/fi-sentence-embeddings-eval/blob/master/scores/scores.csv).
 
 The [source code for replicating the
 results](https://github.com/aajanki/fi-sentence-embeddings-eval) is
@@ -57,24 +64,25 @@ available.
 
 ## Key findings
 
-Average pooled word2vec or frequency weighted average of word2vec
-(SIF) should be the first choices because they are simple to implement
-and are among the top performers on all tested tasks. I was unable to
-replicate the finding by [@wieting2019] that pooled random projections
-(BOREP) would be consistently better than plain pooled word2vec.
+The average pooled word2vec or the frequency weighted average of
+word2vec (SIF) should be the first choice in a new NLP application
+because they are among the top performers on all tested tasks and both
+are simple to implement. I was unable to replicate the finding by
+[@wieting2019] that pooled random projections (BOREP) would be
+consistently better than the plain pooled word2vec.
 
-These results reinforce previous findings in the literature that in
-general word embeddings perform better better than older bag-of-word
-models (TF-IDF). The average pooled word2vec beats TF-IDF on three
-tasks out of four.
+These results reinforce the previous findings in the literature that
+in general word embeddings perform better better than older
+bag-of-word models (TF-IDF). The average pooled word2vec beats TF-IDF
+on three tasks out of four.
 
 More advanced models BERT and LASER, which incorporate the sentence
 context, are not much better than SIF and often worse. This is in
 contrast to general experience on English, where BERT is one of the
-state-of-the-art models. Moreover, BERT and LASER are more
-complicated, have more hyperparameters that require tuning, and are
-slower on inference than pooled word embeddings. So there is no reason
-to prefer BERT or LASER on Finnish documents. 
+state-of-the-art models. Moreover, BERT and LASER have more
+hyperparameters that require tuning and are slower on inference time
+than pooled word embeddings. So there is no reason to prefer the
+published BERT or LASER models on Finnish documents.
 
 The evaluation could be made more comprehensive by including different
 kinds of NLP tasks, such as question answering, natural language
@@ -82,7 +90,8 @@ inference or sentiment analysis, but I'm not aware of suitable public
 Finnish datasets. This study compares only pre-trained models to limit
 the required computational effort. It would be interesting to find out
 how much performance improves if an embedding model is trained
-specifically for the task under evaluation.
+specifically for the task under evaluation. This could benefit
+especially BERT and other advanced models.
 
 ## References
 \setlength{\parindent}{-0.2in}
