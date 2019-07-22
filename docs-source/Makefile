@@ -14,6 +14,8 @@
 ## 	in your working directory. Make sure you do not have files in these
 ##	formats that you want to keep! 
 
+DESTDIR = ../docs
+
 ## All Markdown Files in the working directory
 SRC = $(wildcard *.md)
 
@@ -26,14 +28,18 @@ CSL = apsa
 ## Pandoc options to use
 OPTIONS = markdown+simple_tables+table_captions+yaml_metadata_block+smart
 
-HTML=$(SRC:.md=.html)
+HTML=$(addprefix $(DESTDIR)/, $(SRC:.md=.html))
+CSS=$(DESTDIR)/templates/styles/scholar-multipage.css
 
-all:	$(HTML)
+all:	$(HTML) $(CSS)
 
-html:	clean $(HTML)
+html:	clean $(HTML) $(CSS)
 
-%.html:	%.md
+$(DESTDIR)/%.html:	%.md
 	pandoc -r $(OPTIONS) -w html  --template=templates/scholar-multipage.html --css=templates/styles/scholar-multipage.css --filter pandoc-citeproc --csl=csl/$(CSL).csl --bibliography=$(BIB) -o $@ $<
 
+$(DESTDIR)/templates/styles/%.css:	templates/styles/%.css
+	cp $< $@
+
 clean:
-	rm -f *.html
+	rm -f $(DESTDIR)/*.html $(DESTDIR)/templates/styles/*.css
