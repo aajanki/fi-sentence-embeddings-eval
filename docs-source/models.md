@@ -10,7 +10,7 @@ section:
 ...
 
 This page introduces the sentence embedding models under study and the
-evaluation architecture. The [results of the study](results.html) are
+evaluation architecture. The [results of the study](index.html) are
 presented on a separate page.
 
 ## Introduction to sentence embedding
@@ -125,7 +125,7 @@ embeddings for rare and out-of-vocabulary words. It should help
 particularly on morpheme-rich languages like Finnish (Finnish uses
 lots of inflections). The authors of FastText have published a Finnish
 model trained on Finnish subsets of [Common
-Crawl](http://commoncrawl.org/) and
+Crawl](https://commoncrawl.org/) and
 [Wikipedia](https://www.wikipedia.org/). I'm average-pooling the word
 embeddings to get an embedding for the sentence.
 
@@ -230,7 +230,7 @@ concatenated feature vector is then used as the input for the
 classification part, like above. The BERT model is an exception. It
 has an integrated way of handling sentence pair tasks (see above).
 
-The final evaluation [results](results.html) are computed on a test
+The final evaluation [results](index.html) are computed on a test
 set that has not been used during the training.
 
 The pre-trained sentence embedding models are treated as black box
