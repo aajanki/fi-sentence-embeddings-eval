@@ -35,6 +35,11 @@ Models included in the comparison:
 * [Bag of embedding projections](https://openreview.net/forum?id=BkgPajAcY7) (BOREP)
 * [LASER - Language-Agnostic SEntence Representations](https://github.com/facebookresearch/LASER)
 
+## Results
+
+Read [a report on the study
+results](https://aajanki.github.io/fi-sentence-embeddings-eval/index.html).
+
 ## Download datasets and pre-trained models
 
 ```
@@ -64,25 +69,19 @@ To take the tuned parameters into use, copy the file to the models subdirectory:
 cp results/hyperparameters.json models/hyperparameters.json
 ```
 
-## Preliminary results
+## Refreshing the report
 
-The image shows performance of the models on the test sets.
+The Markdown source files for the report are located at
+[docs-source](doc-source) and the generated HTML files at
+[docs](docs). The
+[report](https://aajanki.github.io/fi-sentence-embeddings-eval/index.html)
+is hosted on Github pages.
 
-![Evaluation results on the test sets](images/scores-20190412.png)
+Generating the report requires
+[pandoc-scholar](https://github.com/pandoc-scholar/pandoc-scholar).
 
-The embeddings from a given model are used as an input for a single
-hidden layer neural network classifier. The classifier is trained on
-training data, the pre-trained embedding models are not trained. The
-classifier parameters are learned on a development dataset for each
-task and embedding model separately. See the source code for the
-details.
-
-(Preliminary) conclusions:
-* Average pooled word2vec or SIF (= frequency weighted average of
-  word2vec) should be the first choices because they are among the top
-  performers in all tested tasks.
-* Word embedding models perform much better than TF-IDF
-* More advanced models BERT and LASER, which incorporate word context,
-  are not much better than SIF and often worse. This is in contrast to
-  general experiences on English. Maybe the BERT/LASER training
-  corpuses for Finnish are too small?
+```
+cd docs-source
+make
+git push  ## Updates the public web pages
+```
