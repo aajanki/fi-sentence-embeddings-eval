@@ -3,24 +3,24 @@ title: Evaluation tasks
 section:
 - title: Results
   href: results.html
-- title: Evaluation tasks
-  href: tasks.html
 - title: Embedding models
   href: models.html
+- title: Evaluation tasks
+  href: tasks.html
 ...
 
-The models were compared on the following Finnish sentence
-classification tasks:
+The [sentence classification models](models.html) in this study were
+compared on the following Finnish sentence classification tasks:
 
 **Eduskunta-VKK** [@eduskuntavkk]: The corpus is based on cabinet
 ministers' answers to written questions by the members of Finnish
 parliament.
 
 The task is straight-forward sentence classification. Individual
-sentences are extracted from the answers and the correct class is the
-name of the ministry which answered the question. There are 15 classes
-(ministries) and 49693 sentences as training data and 2000 sentences
-as test data. The evaluation measure is the F1 score.
+sentences are extracted from the answer documents and the correct
+class is the name of the ministry which answered the question. There
+are 15 classes (ministries) and 49693 sentences as training data and
+2000 sentences as test data. The evaluation measure is the F1 score.
 
 Example sentences and classes:
 

@@ -4,53 +4,27 @@ author:
 - Antti Ajanki:
   name: Antti Ajanki
   email: antti.ajanki@iki.fi
-date: 21.7.2019
+date: 22.7.2019
 section:
 - title: Results
   href: results.html
-- title: Evaluation tasks
-  href: tasks.html
 - title: Embedding models
   href: models.html
+- title: Evaluation tasks
+  href: tasks.html
 ...
 
 This study compares modern sentence classification models on the
 Finnish language. The goal is to understand which sentence
 classification models should be considered as quick baselines in
-various NLP tasks without having to resort to a long and costly
-training. This means that only publicly available pre-trained Finnish
-models are included in the evaluation. The models are evaluated on
-four datasets with sentence classification and paraphrasing tasks.
-Surprisingly, I find that on Finnish average pooled or frequency
-weighted word embeddings tend to perform better than BERT and other
-advanced contextual sentence representations.
-
-## Sentence embedding
-
-A crucial component in most natural language processing (NLP)
-applications is finding an expressive representation for text. Modern
-methods are typically based on sentence embeddings that map a sentence
-onto a numerical vector. The vector attempts to capture the semantic
-content of the text. If two sentences express a similar idea using
-different words, their representations (embedding vectors) should
-still be similar to each other.
-
-Several methods for constructing these embeddings have been proposed
-in the literature. Interestingly, learned embeddings tend generalize
-quite well to other material and NLP tasks besides the ones they were
-trained on. This is fortunate, because it allows us to use pre-trained
-models and avoid expensive training. (A single training run on a
-modern NLP model can cost [up to tens of thousands of
-dollars](https://syncedreview.com/2019/06/27/the-staggering-cost-of-training-sota-ai-models/)).
-
-Sentence embeddings are being applied on almost all NLP application
-areas. In information retrieval they are used for comparing the
-meaning of text snippets, machine translation uses sentence embeddings
-as an “intermediate language” when translating between two human
-languages and many classification and tagging applications are based
-on embeddings. With better representations it is possible to build
-applications that react more naturally to the sentiment and topic of
-written text.
+various natural language processing (NLP) tasks without having to
+resort to a long and costly training. Therefore, only publicly
+available pre-trained Finnish models are included in the evaluation.
+The models are evaluated on four datasets with sentence classification
+and paraphrasing tasks. Surprisingly, I find that, on Finnish
+documents, average pooled or frequency weighted word embeddings tend
+to perform better than BERT and other advanced contextual sentence
+representations.
 
 ## Evaluation results
 
