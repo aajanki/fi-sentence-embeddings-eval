@@ -2,7 +2,7 @@
 title: Sentence embedding models
 section:
 - title: Results
-  href: results.html
+  href: index.html
 - title: Embedding models
   href: models.html
 - title: Evaluation tasks

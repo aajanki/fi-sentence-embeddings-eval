@@ -7,7 +7,7 @@ author:
 date: 22.7.2019
 section:
 - title: Results
-  href: results.html
+  href: index.html
 - title: Embedding models
   href: models.html
 - title: Evaluation tasks
