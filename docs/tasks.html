@@ -1,0 +1,245 @@
+<!doctype html>
+<!--
+Template created by Andrew G. York, with modifications by Antti
+Ajanki, based on this theme by Diana Mounter:
+https://github.com/broccolini/dinky, which mentioned that attribution
+is appreciated. Thanks, broccolini!
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+  <title>Evaluation tasks</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="templates/styles/scholar-multipage.css">
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div class="wrapper">
+<article typeof="ScholarlyArticle" vocab="http://schema.org/">
+    <!-- <header class="article-header"> -->
+<h1 property="headline">Evaluation tasks</h1>
+<!-- </header> -->
+<p class="author-list">
+</p>
+<div class="author_affiliations">
+</div>
+<div class="author-info">
+        </div>
+
+
+
+
+
+<div property="articleBody" class="article-body">
+<p>The <a href="models.html">sentence classification models</a> in this study were compared on the following Finnish sentence classification tasks:</p>
+<p><strong>Eduskunta-VKK</strong> <span class="citation" data-cites="eduskuntavkk">(Ajanki, 2019)</span>: The corpus is based on cabinet ministers’ answers to written questions by the members of Finnish parliament.</p>
+<p>The task is straight-forward sentence classification. Individual sentences are extracted from the answer documents and the correct class is the name of the ministry which answered the question. There are 15 classes (ministries) and 49693 sentences as training data and 2000 sentences as test data. The evaluation measure is the F1 score.</p>
+<p>Example sentences and classes:</p>
+<table>
+<colgroup>
+<col style="width: 61%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Sentence</th>
+<th>Class</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Lääkkeelliset kaasut kuten lääkehappi ovat lääkkeitä ( lääkelaki 395/1987 , 3 § ) .</td>
+<td>sosiaali- ja terveysministeri</td>
+</tr>
+<tr class="even">
+<td>Kilpailutuskriteereissä noudatetaan lakia julkisista hankinnoista ja muita asiaan vaikuttavia säädöksiä .</td>
+<td>sisäministeri</td>
+</tr>
+<tr class="odd">
+<td>Poissaolot tulee selvittää ensisijaisesti opiston ja opiskelijan kesken .</td>
+<td>sisäministeri</td>
+</tr>
+<tr class="even">
+<td>Tavoitteeksi asetettiin Porkkalan luonnonsuojelualueen perustaminen .</td>
+<td>maatalous- ja ympäristöministeri</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Opusparcus</strong> <span class="citation" data-cites="creutz2018">(Creutz, 2018)</span>: Sentence pair paraphrasing task. The corpus is based on sentences from open movie subtitle datasets. The size of the training dataset is about 20 million sentence pairs and the testset is about 2000 pairs. The training data consists of sentence pairs and a statistical estimate on how likely the two sentences mean the same thing. The estimate is based on how often sentences are aligned with similar translations over subtitles on multiple languages. Model’s task is to learn to predict this alignment score.</p>
+<p>The development and test sets consists of sentence pairs that have been labeled by human annotators on the scale 1 (sentences do not mean the same thing) to 4 (the sentences are paraphrases). The evaluation measure is the correlation between model’s prediction and the human score. The model is evaluated only on the Finnish subset of the corpus.</p>
+<p>Example sentence pairs and their annotator scores on the test set:</p>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 43%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Sentence 1</th>
+<th>Sentence 2</th>
+<th style="text-align: center;">Annotator score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Peruuttakaa täysillä .</td>
+<td>Täyttä taakse .</td>
+<td style="text-align: center;">3.5</td>
+</tr>
+<tr class="even">
+<td>Ei minulla ole sijaa täällä .</td>
+<td>Ei täällä ole tilaa minulle .</td>
+<td style="text-align: center;">4.0</td>
+</tr>
+<tr class="odd">
+<td>12-14 tuntia .</td>
+<td>Kerro se heille .</td>
+<td style="text-align: center;">1.0</td>
+</tr>
+<tr class="even">
+<td>Nearyn perheellä ei ole sävelkorvaa .</td>
+<td>Nearyn perheessä ei kukaan osaa laulaa .</td>
+<td style="text-align: center;">2.5</td>
+</tr>
+<tr class="odd">
+<td>Miltä hän näyttää ?</td>
+<td>Minkänäköinen hän on ?</td>
+<td style="text-align: center;">4.0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>TDT categories</strong> <span class="citation" data-cites="pyysalo2015">(Pyysalo, Kanerva, Missilä, Laippala, &amp; Ginter, 2015)</span>: The dataset contains Finnish sentences extracted from many sources: blogs, Wikinews, Europarl, student magazine articles, etc. The task is to predict the source of a sentence. There are 8 classes, and about 8000 training and 1000 test sentences. The evaluation measure is the F1 score.</p>
+<p>Example sentences and their classes:</p>
+<table>
+<colgroup>
+<col style="width: 61%" />
+<col style="width: 38%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Sentence</th>
+<th>Class</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Jäällä kävely avaa aina hauskoja ja erikoisia näkökulmia kaupunkiin.</td>
+<td>Blog</td>
+</tr>
+<tr class="even">
+<td>Harvoin sitä on niin iloinen ihan vaan Oivariinin ja Oltermannin näkemisestä :D</td>
+<td>Blog</td>
+</tr>
+<tr class="odd">
+<td>Arvoisa puhemies, vapaat ja rehelliset vaalit eivät valitettavasti ole itsestäänselvyys vielä läheskään kaikissa maissa</td>
+<td>Europarl</td>
+</tr>
+<tr class="even">
+<td>Sen vuoksi valiokunta päätti esittää tarkistuksia, jotka estävät tällaisen rehujen palauttamisen</td>
+<td>Europarl</td>
+</tr>
+<tr class="odd">
+<td>Tätä mantraa on toisteltu matalien korkojen aikoina tiuhaan.</td>
+<td>Taloussanomat</td>
+</tr>
+<tr class="even">
+<td>Käytännössähän tässä rajoitetaan kansallisvaltioiden suvereniteettia talouspolitiikan puolella, Aunesluoma toteaa.</td>
+<td>Taloussanomat</td>
+</tr>
+<tr class="odd">
+<td>Saarten korkein kohta, 383 metriä, sijaitsee Uotsurilla.</td>
+<td>Wikipedia</td>
+</tr>
+<tr class="even">
+<td>Moottoripyöriä valmistava osa onnistui vakuuttamaan sijoittajat ja teki hienon paluun huipulle.</td>
+<td>Wikipedia</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Ylilauta</strong> <span class="citation" data-cites="ylilautacorpus">(Ylilauta, 2016)</span>: Sentences extracted from Ylilauta discussion forum. The task is to predict if a given pair of sentences are consecutive sentences in the original text or not. The size of the training dataset is 5000 sentence pairs and the test dataset is 2000 pairs. Half of the sentence pairs are in reality consecutive and half are randomly paired sentences, which are assumed to be unrelated. The evaluation measure is the classification accuracy.</p>
+<p>Example sentence pairs:</p>
+<table>
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 40%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Sentence 1</th>
+<th>Sentence 2</th>
+<th>Class</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Ja niin tässä on käynyt .</td>
+<td>Jätkä on ostanut todella tökerösti tehdyn väärennöksen eikä suostu uskomaan sitä .</td>
+<td>Consecutive</td>
+</tr>
+<tr class="even">
+<td>Lisää inkivääri ja valkosipuli , kypsennä vielä minuutti ja mausta .</td>
+<td>Laitoin alogasgyselyyn 1. toiveeksi tulenjohdon .</td>
+<td>Not consecutive</td>
+</tr>
+<tr class="odd">
+<td>Tiedätkö miksi yritykset jakavat osinkoa ?</td>
+<td>Miksi sijoitat juuri yhdysvaltojen yrityksiin ?</td>
+<td>Consecutive</td>
+</tr>
+<tr class="even">
+<td>Eli toisinsanoen ainoa ’ oikea ’ taloustieto on se virallinen selitys mitä jossain tekstikirjassa lukee ?</td>
+<td>Eli pähkinänkuoressa : filosofia toimii sinun tässä määrittelemäsi oikean tavan mukaan .</td>
+<td>Not consecutive</td>
+</tr>
+<tr class="odd">
+<td>Törmäsin koiran kanssa metsäreissulla pieneen hirsiseen metsästysmökkiin joka sijaitsi keskellä ei-mitään .</td>
+<td>Sinne ei vienyt edes selvää polkua , mutta mökin pihassa näkyi kuitenkin asumisen merkkejä tältäkin syksyltä .</td>
+<td>Consecutive</td>
+</tr>
+<tr class="even">
+<td>Harmi , että omat lupaavat junnut myydään jo näin aikaisessa vaiheessa .</td>
+<td>Lisättäköön vielä , että viime torstainakin olisi ollut mainoksia jaettavana , mutta silloin olin onneksi vapaalla .</td>
+<td>Not consecutive</td>
+</tr>
+</tbody>
+</table>
+<h2 id="references">References</h2>
+
+<p></p>
+<div id="refs" class="references">
+<div id="ref-eduskuntavkk">
+<p>Ajanki, A. (2019). Lauseluokitteludatasetti: Ministerien vastaukset kirjallisiin kysymyksiin. Retrieved from <a href="https://github.com/aajanki/eduskunta-vkk" class="uri">https://github.com/aajanki/eduskunta-vkk</a></p>
+</div>
+<div id="ref-creutz2018">
+<p>Creutz, M. (2018). Open subtitles paraphrase corpus for six languages. In <em>Eleventh international conference on language resources and evaluation (LREC 2018)</em>. Retrieved from <a href="https://arxiv.org/abs/1809.06142" class="uri">https://arxiv.org/abs/1809.06142</a></p>
+</div>
+<div id="ref-pyysalo2015">
+<p>Pyysalo, S., Kanerva, J., Missilä, A., Laippala, V., &amp; Ginter, F. (2015). Universal dependencies for Finnish. In <em>NoDaLiDa 2015</em>. Retrieved from <a href="https://aclweb.org/anthology/W/W15/W15-1821.pdf" class="uri">https://aclweb.org/anthology/W/W15/W15-1821.pdf</a></p>
+</div>
+<div id="ref-ylilautacorpus">
+<p>Ylilauta. (2016). The downloadable version of the Ylilauta corpus. Retrieved from <a href="http://urn.fi/urn:nbn:fi:lb-2016101210" class="uri">http://urn.fi/urn:nbn:fi:lb-2016101210</a></p>
+</div>
+</div>
+</div>
+</article>
+<footer>
+  <div class="table-of-contents">
+    <h3>Table of contents</h3>
+    <ul>
+      <li><a href="index.html">Results<a></li>
+      <li><a href="models.html">Embedding models<a></li>
+      <li><a href="tasks.html">Evaluation tasks<a></li>
+    </ul>
+  </div>
+  <p><small>Generated using <a href="https://github.com/pandoc-scholar/pandoc-scholar">pandoc scholar</a></small></p>
+</footer>
+</div>
+ <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+</body>
+</html>

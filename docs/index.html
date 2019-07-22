@@ -1,0 +1,84 @@
+<!doctype html>
+<!--
+Template created by Andrew G. York, with modifications by Antti
+Ajanki, based on this theme by Diana Mounter:
+https://github.com/broccolini/dinky, which mentioned that attribution
+is appreciated. Thanks, broccolini!
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+  <title>Evaluating Finnish sentence embedding models</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="templates/styles/scholar-multipage.css">
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div class="wrapper">
+<article typeof="ScholarlyArticle" vocab="http://schema.org/">
+    <!-- <header class="article-header"> -->
+<h1 property="headline">Evaluating Finnish sentence embedding models</h1>
+<!-- </header> -->
+<p class="author-list">
+  <span property="author" typeof="Person">
+    Antti Ajanki</span>, <a href="mailto:antti.ajanki@iki.fi">antti.ajanki@iki.fi</a></p>
+<div class="author_affiliations">
+</div>
+<div class="author-info">
+        </div>
+
+
+<p>22.7.2019</p>
+
+
+<div property="articleBody" class="article-body">
+<p>This study compares modern sentence classification models on the Finnish language. The goal is to understand which sentence classification models should be considered as quick baselines in various natural language processing (NLP) tasks without having to resort to a long and costly training. Therefore, only publicly available pre-trained Finnish models are included in the evaluation. The models are evaluated on four datasets with sentence classification and paraphrasing tasks. Surprisingly, I find that, on Finnish documents, average pooled or frequency weighted word embeddings tend to perform better than BERT and other advanced contextual sentence representations.</p>
+<h2 id="evaluation-results">Evaluation results</h2>
+<p>The evaluation consists of four classification tasks, each on a separate dataset. In two cases the task is to assign a sentence to a class (Eduskunta-VKK, TDT categories), in one case to detect if two sentences are consecutive or not (Ylilauta), and in one the task is to identify if two sentences are paraphrases (Opusparcus). See <a href="tasks.html">the task page</a> for further details.</p>
+<p>The classification models can be divided in three groups:</p>
+<ul>
+<li>Models based on aggregated word embeddings: Pooled word2vec, pooled FastText, SIF, BOREP</li>
+<li>Full sentence embeddings: BERT, LASER</li>
+<li>TF-IDF as a baseline</li>
+</ul>
+<p>These models have been shown to perform well on English text. The aim of this investigation is to see how well they (or their multilingual variants) perform on the Finnish language. A more detailed description of the models is given on <a href="models.html">the embedding models page</a>.</p>
+<p>The performance of the sentence classification models (the colored bars) on the evaluation tasks (the four panels) is shown below. The models are evaluated on test data not seen during the training. The presented accuracy scores are averages over three random initialization.</p>
+<figure>
+<img src="images/scores.svg" alt="Performance of the evaluated models (the colored bars) on the evaluation tasks (the four panels)" /><figcaption>Performance of the evaluated models (the colored bars) on the evaluation tasks (the four panels)</figcaption>
+</figure>
+<p>You can download the results in the <a href="https://github.com/aajanki/fi-sentence-embeddings-eval/blob/master/scores/scores.csv">CSV format from here</a>.</p>
+<p>The <a href="https://github.com/aajanki/fi-sentence-embeddings-eval">source code for replicating the results</a> is available.</p>
+<h2 id="key-findings">Key findings</h2>
+<p>The average pooled word2vec or the frequency weighted average of word2vec (SIF) should be the first choice in a new NLP application because they are among the top performers on all tested tasks and both are simple to implement. I was unable to replicate the finding by <span class="citation" data-cites="wieting2019">(Wieting &amp; Kiela, 2019)</span> that pooled random projections (BOREP) would be consistently better than the plain pooled word2vec.</p>
+<p>These results reinforce the previous findings in the literature that in general word embeddings perform better better than older bag-of-word models (TF-IDF). The average pooled word2vec beats TF-IDF on three tasks out of four.</p>
+<p>More advanced models BERT and LASER, which incorporate the sentence context, are not much better than SIF and often worse. This is in contrast to general experience on English, where BERT is one of the state-of-the-art models. Moreover, BERT and LASER have more hyperparameters that require tuning and are slower on inference time than pooled word embeddings. So there is no reason to prefer the published BERT or LASER models on Finnish documents.</p>
+<p>The evaluation could be made more comprehensive by including different kinds of NLP tasks, such as question answering, natural language inference or sentiment analysis, but I’m not aware of suitable public Finnish datasets. This study compares only pre-trained models to limit the required computational effort. It would be interesting to find out how much performance improves if an embedding model is trained specifically for the task under evaluation. This could benefit especially BERT and other advanced models.</p>
+<h2 id="references">References</h2>
+
+<p></p>
+<div id="refs" class="references">
+<div id="ref-wieting2019">
+<p>Wieting, J., &amp; Kiela, D. (2019). No training required: Exploring random encoders for sentence classification. <em>arXiv Preprint arXiv:1901.10444</em>. Retrieved from <a href="https://arxiv.org/abs/1901.10444" class="uri">https://arxiv.org/abs/1901.10444</a></p>
+</div>
+</div>
+</div>
+</article>
+<footer>
+  <div class="table-of-contents">
+    <h3>Table of contents</h3>
+    <ul>
+      <li><a href="index.html">Results<a></li>
+      <li><a href="models.html">Embedding models<a></li>
+      <li><a href="tasks.html">Evaluation tasks<a></li>
+    </ul>
+  </div>
+  <p><small>Generated using <a href="https://github.com/pandoc-scholar/pandoc-scholar">pandoc scholar</a></small></p>
+</footer>
+</div>
+ <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+</body>
+</html>
