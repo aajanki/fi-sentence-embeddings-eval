@@ -7,6 +7,9 @@ section:
   href: models.html
 - title: Evaluation tasks
   href: tasks.html
+license:
+  name: CC BY 4.0
+  href: https://creativecommons.org/licenses/by/4.0/
 ...
 
 This page introduces the sentence embedding models under study and the

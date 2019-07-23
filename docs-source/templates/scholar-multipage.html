@@ -118,10 +118,13 @@ $if(section)$
     <h3>Table of contents</h3>
     <ul>
 $for(section)$
-      <li><a href="$section.href$">$section.title$<a></li>
+      <li><a href="$section.href$">$section.title$</a></li>
 $endfor$
     </ul>
   </div>
+$endif$
+$if(license)$
+  <p><small>This work is licensed under a <a href="$license.href$">$license.name$</a> license.</small></p>
 $endif$
   <p><small>Generated using <a href="https://github.com/pandoc-scholar/pandoc-scholar">pandoc scholar</a></small></p>
 </footer>
