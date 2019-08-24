@@ -8,7 +8,7 @@ from keras.models import Sequential
 from keras.wrappers.scikit_learn import KerasClassifier
 from scipy import stats
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import f1_score, classification_report, confusion_matrix
+from sklearn.metrics import f1_score, accuracy_score, classification_report, confusion_matrix
 from .preprocess import load_UD, source_type_percentages
 
 
@@ -24,7 +24,7 @@ class BaseTask:
         clf = self.train_classifier(X_train, y_train, hyperparameters)
         train_duration = time.process_time() - t1
 
-        return self.compute_score(clf, X_test, y_test), train_duration
+        return self.compute_scores(clf, X_test, y_test), train_duration
 
     def prepare_data(self, embeddings):
         raise NotImplementedError('prepare_data() must be implemented')
@@ -32,14 +32,13 @@ class BaseTask:
     def train_classifier(self, X, y, params):
         return None
 
-    def compute_score(self, clf, X_test, y_test):
-        return 0.0
+    def compute_scores(self, clf, X_test, y_test):
+        return {}
 
 
 class ClassificationTask(BaseTask):
     def __init__(self, name, datadir, use_dev_set=False, verbose=False):
         self.name = name
-        self.score_label = 'F1 score'
         self.verbose = verbose
         self.df_train, self.df_test = self.load_data(datadir, use_dev_set)
         self.print_data_summary(self.df_train, self.df_test)
@@ -90,7 +89,7 @@ class ClassificationTask(BaseTask):
 
         return model
 
-    def compute_score(self, clf, X_test, y_test):
+    def compute_scores(self, clf, X_test, y_test):
         y_pred = clf.predict(X_test)
 
         print(classification_report(y_test, y_pred))
@@ -99,10 +98,14 @@ class ClassificationTask(BaseTask):
                            columns=clf.classes_, index=clf.classes_)
               .to_string())
 
-        f1 = f1_score(y_test, y_pred, average='micro')
-        print(f'F1 score: {f1:.2f}')
+        f1_micro = f1_score(y_test, y_pred, average='micro')
+        f1_macro = f1_score(y_test, y_pred, average='macro')
+        acc = accuracy_score(y_test, y_pred)
+        print(f'macro F1: {f1_macro:.2f}, '
+              f'micro F1: {f1_micro:.2f}, '
+              f'accuracy: {acc:.2f}')
 
-        return f1
+        return {'F1 score': f1_macro, 'F1 micro': f1_micro, 'Accuracy': acc}
 
     def sentence_embeddings(self, embeddings, df_train, df_test):
         embeddings.fit(df_train['sentence'])
@@ -167,7 +170,6 @@ class OpusparcusTask(BaseTask):
     def __init__(self, name, datadir, num_sample=10000, use_dev_set=False,
                  verbose=False):
         self.name = name
-        self.score_label = "Pearson's coefficient"
         self.verbose = verbose
 
         train_filename = os.path.join(datadir, 'fi/train/fi-train.txt.bz2')
@@ -212,14 +214,14 @@ class OpusparcusTask(BaseTask):
 
         return clf
 
-    def compute_score(self, clf, X_test, y_test):
+    def compute_scores(self, clf, X_test, y_test):
         y_proba = clf.predict_proba(X_test)
         y_pred = y_proba.dot(np.arange(1, 6))
         corr = np.corrcoef(y_test, y_pred)[0, 1]
 
         print(f'Correlation: {corr:.2f}')
         
-        return corr
+        return {"Pearson's coefficient": corr}
 
     def train_class_probabilities(self, df):
         # Split the total_pmi variable in 5 bins. (The bin boundaries
@@ -289,7 +291,6 @@ class YlilautaConsecutiveSentencesTask(BaseTask):
 
     def __init__(self, name, datadir, use_dev_set=False, verbose=False):
         self.name = name
-        self.score_label = 'Accuracy'
         self.verbose = verbose
 
         train_filename = os.path.join(datadir, 'train.tab')
@@ -346,13 +347,17 @@ class YlilautaConsecutiveSentencesTask(BaseTask):
 
         return model
 
-    def compute_score(self, clf, X_test, y_test):
+    def compute_scores(self, clf, X_test, y_test):
         y_pred = clf.predict(X_test).squeeze()
         test_acc = np.mean(y_test == y_pred)
+        f1_micro = f1_score(y_test, y_pred, average='micro')
+        f1_macro = f1_score(y_test, y_pred, average='macro')
 
-        print(f'Accuracy: {test_acc:.2f}')
+        print(f'macro F1: {f1_macro:.2f}, '
+              f'micro F1: {f1_micro:.2f}, '
+              f'accuracy: {test_acc:.2f}')
 
-        return test_acc
+        return {'F1 score': f1_macro, 'F1 micro': f1_micro, 'Accuracy': test_acc}
 
     def load_data(self, filename):
         return pd.read_csv(filename, sep='\t', header=0)

@@ -78,7 +78,7 @@ def main():
 
 
 def evaluate_models(models, tasks, hyperparameters):
-    scores = []
+    res = []
     for model_builder in models:
         model = model_builder()
         for task in tasks:
@@ -89,17 +89,18 @@ def evaluate_models(models, tasks, hyperparameters):
             hyp = hyperparameters.get(task.name, model.name)
             print(json.dumps(hyp))
 
-            score, duration = task.evaluate(model, hyp)
+            scores, duration = task.evaluate(model, hyp)
 
-            scores.append({
-                'task': task.name,
-                'score_label': task.score_label,
-                'model': model.name,
-                'score': score,
-                'train_duration': duration
-            })
+            for score_label, score in scores.items():
+                res.append({
+                    'task': task.name,
+                    'model': model.name,
+                    'score_label': score_label,
+                    'score': score,
+                    'train_duration': duration
+                })
 
-    return pd.DataFrame(scores)
+    return pd.DataFrame(res)
 
 
 def save_results(scores, resultdir):

@@ -19,7 +19,7 @@ def tune():
                        use_dev_set=True),
         YlilautaConsecutiveSentencesTask('Ylilauta',
                                          'data/ylilauta',
-                                         use_dev_set=True)
+                                         use_dev_set=True),
         EduskuntaVKKClassificationTask('Eduskunta-VKK',
                                        'data/eduskunta-vkk',
                                        use_dev_set=True),
