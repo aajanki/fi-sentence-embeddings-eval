@@ -1,13 +1,12 @@
 import numpy as np
-from gensim.models import FastText
+from gensim.models.fasttext import load_facebook_vectors
 from .sentenceembedding import SentenceEmbeddingModel
 
 
 class PooledFastText(SentenceEmbeddingModel):
     def __init__(self, name, data_filename):
         super().__init__(name)
-        self.model = FastText.load_fasttext_format(data_filename,
-                                                   full_model=False)
+        self.model = load_facebook_vectors(data_filename)
 
     def describe(self):
         return '\n'.join([
