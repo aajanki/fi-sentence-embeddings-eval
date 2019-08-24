@@ -67,14 +67,7 @@ def main():
 
         scores.append(evaluate_models(models, tasks, hyperparameters))
 
-    scores = (pd.concat(scores)
-              .groupby(['task', 'score_label', 'model'])
-              .agg([np.mean, np.std]))
-
-    print('F1 score summary:')
-    print(scores.to_string(float_format=two_decimals))
-
-    save_results(scores, args.resultdir)
+        save_scores(scores, args.resultdir)
 
 
 def evaluate_models(models, tasks, hyperparameters):
@@ -103,7 +96,18 @@ def evaluate_models(models, tasks, hyperparameters):
     return pd.DataFrame(res)
 
 
-def save_results(scores, resultdir):
+def save_scores(scores, resultdir):
+    summary = (pd.concat(scores)
+               .groupby(['task', 'score_label', 'model'])
+               .agg([np.mean, np.std]))
+
+    print('F1 score summary:')
+    print(summary.to_string(float_format=two_decimals))
+
+    write_scores_csv(summary, resultdir)
+
+
+def write_scores_csv(scores, resultdir):
     os.makedirs(resultdir, exist_ok=True)
     filename = os.path.join(resultdir, 'scores.csv')
     flattened = scores.reset_index()
