@@ -4,7 +4,7 @@ author:
 - Antti Ajanki:
   name: Antti Ajanki
   email: antti.ajanki@iki.fi
-date: 22.7.2019
+date: 29.8.2019
 section:
 - title: Results
   href: index.html
@@ -28,6 +28,14 @@ and paraphrasing tasks. Surprisingly, I find that, on Finnish
 documents, average pooled or frequency weighted word embeddings tend
 to perform better than BERT and other advanced contextual sentence
 representations.
+
+**Change history**
+
+22.7.2019 The initial version\
+29.8.2019 Using macro F1 score as the evaluation metric because it
+makes more sense on unbalanced classification. The change makes SIF
+stand out even more clearly. (git commit
+[8eb451f6](https://github.com/aajanki/fi-sentence-embeddings-eval/tree/8eb451f6db888af6c48e931109d6d2ee0cd56ea0))
 
 ## Evaluation results
 
@@ -67,12 +75,13 @@ available.
 
 ## Key findings
 
-The average pooled word2vec or the frequency weighted average of
-word2vec (SIF) should be the first choice in a new NLP application
-because they are among the top performers on all tested tasks and both
-are simple to implement. I was unable to replicate the finding by
-[@wieting2019] that pooled random projections (BOREP) would be
-consistently better than the plain pooled word2vec.
+The frequency weighted average of word2vec (SIF) should be the first
+choice in a new NLP application because it achieves the best or the
+second best performance on all tested models. The pooled word2vec is
+even easier to implement and still performs quite well. I was unable
+to replicate the finding by [@wieting2019] that pooled random
+projections (BOREP) would be consistently better than the plain pooled
+word2vec.
 
 These results reinforce the previous findings in the literature that
 in general word embeddings perform better better than older

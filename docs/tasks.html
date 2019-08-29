@@ -37,7 +37,7 @@ is appreciated. Thanks, broccolini!
 <div property="articleBody" class="article-body">
 <p>The <a href="models.html">sentence classification models</a> in this study were compared on the following Finnish sentence classification tasks:</p>
 <p><strong>Eduskunta-VKK</strong> <span class="citation" data-cites="eduskuntavkk">(Ajanki, 2019)</span>: The corpus is based on cabinet ministers’ answers to written questions by the members of Finnish parliament.</p>
-<p>The task is straight-forward sentence classification. Individual sentences are extracted from the answer documents and the correct class is the name of the ministry which answered the question. There are 15 classes (ministries) and 49693 sentences as training data and 2000 sentences as test data. The evaluation measure is the F1 score.</p>
+<p>The task is straight-forward sentence classification. Individual sentences are extracted from the answer documents and the correct class is the name of the ministry which answered the question. There are 15 classes (ministries) and 49693 sentences as training data and 2000 sentences as test data. The evaluation measure is the macro F1 score.</p>
 <p>Example sentences and classes:</p>
 <table>
 <colgroup>
@@ -113,7 +113,7 @@ is appreciated. Thanks, broccolini!
 </tr>
 </tbody>
 </table>
-<p><strong>TDT categories</strong> <span class="citation" data-cites="pyysalo2015">(Pyysalo, Kanerva, Missilä, Laippala, &amp; Ginter, 2015)</span>: The dataset contains Finnish sentences extracted from many sources: blogs, Wikinews, Europarl, student magazine articles, etc. The task is to predict the source of a sentence. There are 8 classes, and about 8000 training and 1000 test sentences. The evaluation measure is the F1 score.</p>
+<p><strong>TDT categories</strong> <span class="citation" data-cites="pyysalo2015">(Pyysalo, Kanerva, Missilä, Laippala, &amp; Ginter, 2015)</span>: The dataset contains Finnish sentences extracted from many sources: blogs, Wikinews, Europarl, student magazine articles, etc. The task is to predict the source of a sentence. There are 8 classes, and about 8000 training and 1000 test sentences. The evaluation measure is the macro F1 score.</p>
 <p>Example sentences and their classes:</p>
 <table>
 <colgroup>

@@ -23,7 +23,8 @@ The task is straight-forward sentence classification. Individual
 sentences are extracted from the answer documents and the correct
 class is the name of the ministry which answered the question. There
 are 15 classes (ministries) and 49693 sentences as training data and
-2000 sentences as test data. The evaluation measure is the F1 score.
+2000 sentences as test data. The evaluation measure is the macro F1
+score.
 
 Example sentences and classes:
 
@@ -65,7 +66,7 @@ Example sentence pairs and their annotator scores on the test set:
 sentences extracted from many sources: blogs, Wikinews, Europarl,
 student magazine articles, etc. The task is to predict the source of a
 sentence. There are 8 classes, and about 8000 training and 1000 test
-sentences. The evaluation measure is the F1 score.
+sentences. The evaluation measure is the macro F1 score.
 
 Example sentences and their classes:
 

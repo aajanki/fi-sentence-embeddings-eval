@@ -32,11 +32,14 @@ is appreciated. Thanks, broccolini!
         </div>
 
 
-<p>22.7.2019</p>
+<p>29.8.2019</p>
 
 
 <div property="articleBody" class="article-body">
 <p>This study compares modern sentence classification models on the Finnish language. The goal is to understand which sentence classification models should be considered as quick baselines in various natural language processing (NLP) tasks without having to resort to a long and costly training. Therefore, only publicly available pre-trained Finnish models are included in the evaluation. The models are evaluated on four datasets with sentence classification and paraphrasing tasks. Surprisingly, I find that, on Finnish documents, average pooled or frequency weighted word embeddings tend to perform better than BERT and other advanced contextual sentence representations.</p>
+<p><strong>Change history</strong></p>
+<p>22.7.2019 The initial version<br />
+29.8.2019 Using macro F1 score as the evaluation metric because it makes more sense on unbalanced classification. The change makes SIF stand out even more clearly. (git commit <a href="https://github.com/aajanki/fi-sentence-embeddings-eval/tree/8eb451f6db888af6c48e931109d6d2ee0cd56ea0">8eb451f6</a>)</p>
 <h2 id="evaluation-results">Evaluation results</h2>
 <p>The evaluation consists of four classification tasks, each on a separate dataset. In two cases the task is to assign a sentence to a class (Eduskunta-VKK, TDT categories), in one case to detect if two sentences are consecutive or not (Ylilauta), and in one the task is to identify if two sentences are paraphrases (Opusparcus). See <a href="tasks.html">the task page</a> for further details.</p>
 <p>The classification models can be divided in three groups:</p>
@@ -53,7 +56,7 @@ is appreciated. Thanks, broccolini!
 <p>You can download the results in the <a href="https://github.com/aajanki/fi-sentence-embeddings-eval/blob/master/scores/scores.csv">CSV format from here</a>.</p>
 <p>The <a href="https://github.com/aajanki/fi-sentence-embeddings-eval">source code for replicating the results</a> is available.</p>
 <h2 id="key-findings">Key findings</h2>
-<p>The average pooled word2vec or the frequency weighted average of word2vec (SIF) should be the first choice in a new NLP application because they are among the top performers on all tested tasks and both are simple to implement. I was unable to replicate the finding by <span class="citation" data-cites="wieting2019">(Wieting &amp; Kiela, 2019)</span> that pooled random projections (BOREP) would be consistently better than the plain pooled word2vec.</p>
+<p>The frequency weighted average of word2vec (SIF) should be the first choice in a new NLP application because it achieves the best or the second best performance on all tested models. The pooled word2vec is even easier to implement and still performs quite well. I was unable to replicate the finding by <span class="citation" data-cites="wieting2019">(Wieting &amp; Kiela, 2019)</span> that pooled random projections (BOREP) would be consistently better than the plain pooled word2vec.</p>
 <p>These results reinforce the previous findings in the literature that in general word embeddings perform better better than older bag-of-word models (TF-IDF). The average pooled word2vec beats TF-IDF on three tasks out of four.</p>
 <p>More advanced models BERT and LASER, which incorporate the sentence context, are not much better than SIF and often worse. This is in contrast to general experience on English, where BERT is one of the state-of-the-art models. Moreover, BERT and LASER have more hyperparameters that require tuning and are slower on inference time than pooled word embeddings. So there is no reason to prefer the published BERT or LASER models on Finnish documents.</p>
 <p>The evaluation could be made more comprehensive by including different kinds of NLP tasks, such as question answering, natural language inference or sentiment analysis, but I’m not aware of suitable public Finnish datasets. This study compares only pre-trained models to limit the required computational effort. It would be interesting to find out how much performance improves if an embedding model is trained specifically for the task under evaluation. This could benefit especially BERT and other advanced models.</p>
