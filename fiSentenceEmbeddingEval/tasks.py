@@ -190,6 +190,8 @@ class OpusparcusTask(BaseTask):
         ], axis=0, ignore_index=True, sort=False)
         embeddings.fit(all_sentences)
 
+        print(embeddings.describe())
+
         X_train = embeddings.transform_pairs(self.df_train[['sentence1', 'sentence2']])
         y_train = self.train_class_probabilities(self.df_train)
 
@@ -310,6 +312,8 @@ class YlilautaConsecutiveSentencesTask(BaseTask):
             self.df_train['sentence2']
         ], axis=0, ignore_index=True, sort=False)
         embeddings.fit(all_sentences)
+
+        print(embeddings.describe())
 
         X_train = embeddings.transform_pairs(self.df_train[['sentence1', 'sentence2']])
         y_train = (self.df_train['label'] == 1).astype(int)
