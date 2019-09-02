@@ -82,7 +82,13 @@ def evaluate_models(models, tasks, hyperparameters):
             hyp = hyperparameters.get(task.name, model.name)
             print(json.dumps(hyp))
 
-            scores, duration = task.evaluate(model, hyp)
+            embedding_params, classifier_params = \
+                split_embedding_and_classifier_params(hyp)
+
+            if embedding_params:
+                model = model_builder(**embedding_params)
+
+            scores, duration = task.evaluate(model, classifier_params)
 
             for score_label, score in scores.items():
                 res.append({
@@ -94,6 +100,20 @@ def evaluate_models(models, tasks, hyperparameters):
                 })
 
     return pd.DataFrame(res)
+
+
+def split_embedding_and_classifier_params(params):
+    embedding_params = {}
+    classifier_params = {}
+
+    for k, v in params.items():
+        if k.startswith('embedding_'):
+            embedding_key = k[len('embedding_'):]
+            embedding_params[embedding_key] = v
+        else:
+            classifier_params[k] = v
+
+    return (embedding_params, classifier_params)
 
 
 def save_scores(scores, resultdir):
@@ -141,8 +161,8 @@ def model_bert():
 
 
 def model_tfidf(voikko):
-    def inner():
-        return TfidfVectors('TF-IDF', voikko)
+    def inner(min_df=4):
+        return TfidfVectors('TF-IDF', voikko, min_df)
     return inner
 
 

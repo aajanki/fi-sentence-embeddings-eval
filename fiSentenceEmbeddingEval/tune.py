@@ -40,8 +40,8 @@ def tune():
             'BERT multilingual',
             'pretrained/bert/multi_cased_L-12_H-768_A-12', [-3])
 
-    def model_tfidf():
-        return TfidfVectors('TF-IDF', voikko)
+    def model_tfidf(min_df):
+        return TfidfVectors('TF-IDF', voikko, min_df)
 
     def model_sif():
         return SIF(
@@ -74,6 +74,7 @@ def tune():
         evaluations_for_model(model_tfidf, tasks, {
             'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
             'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
+            'embedding_min_df': hp.choice('embedding_min_df', [2, 4, 8]),
         }),
         evaluations_for_model(model_sif, tasks, {
             'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
@@ -94,15 +95,30 @@ def tune():
     best_params = {}
     for kv in evaluations:
         task = kv['task']
-        embedding_model = kv['embedding_model']
-        X_train, y_train, X_test, y_test = \
-            task.prepare_data(embedding_model)
+        embedding_model = None
+        X_train = None
+        y_train = None
+        X_test = None
+        y_test = None
 
-        def objective(space):
+        def objective(params):
+            (embedding_params, classifier_params) = \
+                split_embedding_and_classifier_params(params)
+
+            if embedding_params or embedding_model is None:
+                if embedding_params:
+                    print('Reinitializing the embedding model '
+                          'because parameters have changed')
+
+                builder = kv['embedding_model_builder']
+                embedding_model = builder(**embedding_params)
+                X_train, y_train, X_test, y_test = \
+                    task.prepare_data(embedding_model)
+
             print(f'{embedding_model.name}, {task.name}')
-            print(space)
+            print(params)
 
-            clf = task.train_classifier(X_train, y_train, space)
+            clf = task.train_classifier(X_train, y_train, classifier_params)
             f1 = task.compute_score(clf, X_test, y_test)
             return -f1
 
@@ -128,14 +144,27 @@ def tune():
 
 def evaluations_for_model(embedding_model_builder, tasks, space):
     def inner():
-        model = embedding_model_builder()
         return ({
             'task': task,
-            'embedding_model': model,
+            'embedding_model_builder': embedding_model_builder,
             'space': space
         } for task in tasks)
 
     return itertools.chain.from_iterable(inner() for _ in range(1))
+
+
+def split_embedding_and_classifier_params(params):
+    embedding_params = {}
+    classifier_params = {}
+
+    for k, v in params.items():
+        if k.startswith('embedding_'):
+            embedding_key = k[len('embedding_'):]
+            embedding_params[embedding_key] = v
+        else:
+            classifier_params[k] = v
+
+    return (embedding_params, classifier_params)
 
 
 if __name__ == '__main__':

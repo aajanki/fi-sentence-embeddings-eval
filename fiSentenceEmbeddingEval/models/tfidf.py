@@ -4,14 +4,14 @@ from .sentenceembedding import SentenceEmbeddingModel
 
 
 class TfidfVectors(SentenceEmbeddingModel):
-    def __init__(self, name, voikko):
+    def __init__(self, name, voikko, min_df=4):
         super().__init__(name)
         tokenizer = self.build_voikko_tokenizer(voikko)
         self.vectorizer = TfidfVectorizer(lowercase=True,
                                           tokenizer=tokenizer,
                                           ngram_range=(1, 2),
-                                          min_df=4,
-                                          max_features=20000)
+                                          min_df=min_df,
+                                          max_features=25000)
 
     def fit(self, sentences):
         self.vectorizer.fit(sentences)
