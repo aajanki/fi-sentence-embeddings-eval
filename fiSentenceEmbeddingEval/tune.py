@@ -41,7 +41,7 @@ def tune():
             'pretrained/bert/multi_cased_L-12_H-768_A-12', [-3])
 
     def model_tfidf(min_df):
-        return TfidfVectors('TF-IDF', voikko, min_df)
+        return TfidfVectors('TF-IDF', voikko, int(min_df))
 
     def model_sif():
         return SIF(
@@ -74,7 +74,7 @@ def tune():
         evaluations_for_model(model_tfidf, tasks, {
             'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
             'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
-            'embedding_min_df': hp.choice('embedding_min_df', [2, 4, 8]),
+            'embedding_min_df': hp.quniform('embedding_min_df', 2, 8, 2),
         }),
         evaluations_for_model(model_sif, tasks, {
             'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),

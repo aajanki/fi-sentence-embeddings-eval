@@ -162,7 +162,7 @@ def model_bert():
 
 def model_tfidf(voikko):
     def inner(min_df=4):
-        return TfidfVectors('TF-IDF', voikko, min_df)
+        return TfidfVectors('TF-IDF', voikko, int(min_df))
     return inner
 
 
