@@ -119,8 +119,7 @@ def tune():
             print(params)
 
             clf = task.train_classifier(X_train, y_train, classifier_params)
-            f1 = task.compute_score(clf, X_test, y_test)
-            return -f1
+            return -task.compute_optimization_score(clf, X_test, y_test)
 
         trials = Trials()
         best = fmin(fn=objective,

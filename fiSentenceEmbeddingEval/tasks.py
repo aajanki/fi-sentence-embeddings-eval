@@ -35,6 +35,9 @@ class BaseTask:
     def compute_scores(self, clf, X_test, y_test):
         return {}
 
+    def compute_optimization_score(self, clf, X_test, y_test):
+        return 0.0
+
 
 class ClassificationTask(BaseTask):
     def __init__(self, name, datadir, use_dev_set=False, verbose=False):
@@ -106,6 +109,9 @@ class ClassificationTask(BaseTask):
               f'accuracy: {acc:.2f}')
 
         return {'F1 score': f1_macro, 'F1 micro': f1_micro, 'Accuracy': acc}
+
+    def compute_optimization_score(self, clf, X_test, y_test):
+        return self.compute_scores(clf, X_test, y_test)['F1 score']
 
     def sentence_embeddings(self, embeddings, df_train, df_test):
         embeddings.fit(df_train['sentence'])
@@ -224,6 +230,9 @@ class OpusparcusTask(BaseTask):
         print(f'Correlation: {corr:.2f}')
         
         return {"Pearson's coefficient": corr}
+
+    def compute_optimization_score(self, clf, X_test, y_test):
+        return self.compute_scores(clf, X_test, y_test)["Pearson's coefficient"]
 
     def train_class_probabilities(self, df):
         # Split the total_pmi variable in 5 bins. (The bin boundaries
@@ -362,6 +371,9 @@ class YlilautaConsecutiveSentencesTask(BaseTask):
               f'accuracy: {test_acc:.2f}')
 
         return {'F1 score': f1_macro, 'F1 micro': f1_micro, 'Accuracy': test_acc}
+
+    def compute_optimization_score(self, clf, X_test, y_test):
+        return self.compute_scores(clf, X_test, y_test)['Accuracy']
 
     def load_data(self, filename):
         return pd.read_csv(filename, sep='\t', header=0)
