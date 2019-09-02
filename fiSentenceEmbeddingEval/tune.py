@@ -102,6 +102,8 @@ def tune():
         y_test = None
 
         def objective(params):
+            nonlocal embedding_model, X_train, y_train, X_test, y_test
+
             (embedding_params, classifier_params) = \
                 split_embedding_and_classifier_params(params)
 
