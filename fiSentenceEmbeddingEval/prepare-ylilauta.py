@@ -8,7 +8,7 @@ from xml.parsers.expat import ExpatError
 
 def main():
     print('Preprocessing ylilauta dataset, this will take while...')
-    
+
     data_dir = 'data/ylilauta'
     n_train = 5000
     n_dev = 500
@@ -17,7 +17,8 @@ def main():
     np.random.seed(9999)
     
     df = load(os.path.join(data_dir, 'ylilauta_20150304.vrt'))
-    df.to_csv(os.path.join(data_dir, 'sentences.tab'), sep='\t', index=False)
+    df.to_csv(os.path.join(data_dir, 'sentences.tab'), sep='\t',
+              index=False, encoding='utf-8')
 
     print(df[['section', 'sentence']].groupby('section').count())
 
@@ -26,9 +27,12 @@ def main():
     df = df[~df['section'].isin(ignore_sections) & (df['num_tokens'] > 4)]
 
     train, dev, test = generate_samples(df, n_train, n_dev, n_test)
-    train.to_csv(os.path.join(data_dir, 'train.tab'), sep='\t', index=False)
-    dev.to_csv(os.path.join(data_dir, 'dev.tab'), sep='\t', index=False)
-    test.to_csv(os.path.join(data_dir, 'test.tab'), sep='\t', index=False)
+    train.to_csv(os.path.join(data_dir, 'train.tab'), sep='\t',
+                 index=False, encoding='utf-8')
+    dev.to_csv(os.path.join(data_dir, 'dev.tab'), sep='\t',
+               index=False, encoding='utf-8')
+    test.to_csv(os.path.join(data_dir, 'test.tab'), sep='\t',
+                index=False, encoding='utf-8')
 
 
 def load(filename):
