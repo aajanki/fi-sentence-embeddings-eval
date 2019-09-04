@@ -2,16 +2,6 @@
 
 ### DATASET ###
 
-# Finnish Internet Parsebank word2vec vectors
-# http://bionlp.utu.fi/finnish-internet-parsebank.html
-mkdir -p data/fin-word2vec
-wget -P data/fin-word2vec/ http://bionlp-www.utu.fi/fin-vector-space-models/fin-word2vec.bin
-
-# Word frequencies on Finnish Internet Parseback
-# https://turkunlp.org/finnish_nlp.html
-mkdir -p data/finnish_vocab
-wget -P data/finnish_vocab/ http://bionlp-www.utu.fi/.jmnybl/finnish_vocab.txt.gz
-
 # Opusparcus: Open Subtitles Paraphrase Corpus for Six Languages
 # http://urn.fi/urn:nbn:fi:lb-2018021221
 mkdir -p data/opusparcus
@@ -35,9 +25,15 @@ wget -P data/eduskunta-vkk https://github.com/aajanki/eduskunta-vkk/raw/1.0/vkk/
 
 ### PRE-TRAINED MODELS ###
 
-# word2vec embeddings for Finnish
+# Finnish Internet Parsebank word2vec vectors
+# http://bionlp.utu.fi/finnish-internet-parsebank.html
 mkdir -p pretrained/fin-word2vec/
 wget -P pretrained/fin-word2vec/ http://bionlp-www.utu.fi/fin-vector-space-models/fin-word2vec.bin
+
+# Word frequencies on Finnish Internet Parseback
+# https://turkunlp.org/finnish_nlp.html
+mkdir -p data/finnish_vocab
+wget -P data/finnish_vocab/ http://bionlp-www.utu.fi/.jmnybl/finnish_vocab.txt.gz
 
 # FastText Finnish model
 # https://github.com/facebookresearch/fastText/blob/master/docs/crawl-vectors.md
