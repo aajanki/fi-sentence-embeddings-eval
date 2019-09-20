@@ -1,49 +1,52 @@
 {
   "TDT categories": {
     "Pooled word2vec": {
-      "parameters": {
+      "classifier": {
         "dropout_prop": 0.638190456754723,
         "hidden_dim1": 140.0
       },
       "score": 0.7454931071049841
     },
     "Pooled FastText": {
-      "parameters": {
+      "classifier": {
         "dropout_prop": 0.24654369445465563,
         "hidden_dim1": 10.0
       },
       "score": 0.721102863202545
     },
     "BERT multilingual": {
-      "parameters": {
+      "classifier": {
         "dropout_prop": 0.6338108690366673,
         "hidden_dim1": 490.0
       },
       "score": 0.633085896076352
     },
     "TF-IDF": {
-      "parameters": {
-        "dropout_prop": 0.7847202561920132,
-        "hidden_dim1": 170.0
+      "classifier": {
+        "dropout_prop": 0.7993132748906513,
+        "hidden_dim1": 280.0
       },
-      "score": 0.65
+      "embedding": {
+        "min_df": 2.0
+      },
+      "score": 0.6098428905394956
     },
     "SIF": {
-      "parameters": {
+      "classifier": {
         "dropout_prop": 0.43290456032090774,
         "hidden_dim1": 130.0
       },
       "score": 0.7391304347826085
     },
     "BOREP": {
-      "parameters": {
+      "classifier": {
         "dropout_prop": 0.6886693156127378,
         "hidden_dim1": 40.0
       },
       "score": 0.7476139978791092
     },
     "LASER": {
-      "parameters": {
+      "classifier": {
         "dropout_prop": 0.46979777835228087,
         "hidden_dim1": 150.0
       },
@@ -52,49 +55,52 @@
   },
   "Opusparcus": {
     "Pooled word2vec": {
-      "parameters": {
+      "classifier": {
         "dropout_prop": 0.5654292507818266,
         "hidden_dim1": 190.0
       },
       "score": 0.49749268789132
     },
     "Pooled FastText": {
-      "parameters": {
+      "classifier": {
         "dropout_prop": 0.6053881942549367,
         "hidden_dim1": 250.0
       },
       "score": 0.5202073259377935
     },
     "BERT multilingual": {
-      "parameters": {
+      "classifier": {
         "dropout_prop": 0.7916468137781945,
         "hidden_dim1": 50.0
       },
       "score": 0.5613646555284336
     },
     "TF-IDF": {
-      "parameters": {
-        "dropout_prop": 0.5199052404094242,
-        "hidden_dim1": 920.0
+      "classifier": {
+        "dropout_prop": 0.5775432096834568,
+        "hidden_dim1": 440.0
       },
-      "score": 0.27289053079802095
+      "embedding": {
+        "min_df": 8.0
+      },
+      "score": 0.3187612398364239
     },
     "SIF": {
-      "parameters": {
+      "classifier": {
         "dropout_prop": 0.41408213806668337,
         "hidden_dim1": 50.0
       },
       "score": 0.5134595545691614
     },
     "BOREP": {
-      "parameters": {
+      "classifier": {
         "dropout_prop": 0.7244879126196746,
         "hidden_dim1": 60.0
       },
       "score": 0.503165010744915
     },
     "LASER": {
-      "parameters": {
+      "classifier": {
         "dropout_prop": 0.7277189341044206,
         "hidden_dim1": 160.0
       },
@@ -103,49 +109,52 @@
   },
   "Ylilauta": {
     "Pooled word2vec": {
-      "parameters": {
+      "classifier": {
         "dropout_prop": 0.30342662644226565,
         "hidden_dim1": 110.0
       },
       "score": 0.766
     },
     "Pooled FastText": {
-      "parameters": {
+      "classifier": {
         "dropout_prop": 0.26136446669629176,
         "hidden_dim1": 270.0
       },
       "score": 0.706
     },
     "BERT multilingual": {
-      "parameters": {
+      "classifier": {
         "dropout_prop": 0.7951897188641843,
         "hidden_dim1": 340.0
       },
       "score": 0.738
     },
     "SIF": {
-      "parameters": {
+      "classifier": {
         "dropout_prop": 0.46721279369040813,
         "hidden_dim1": 300.0
       },
       "score": 0.784
     },
     "TF-IDF": {
-      "parameters": {
-        "dropout_prop": 0.20183395470115623,
-        "hidden_dim1": 160.0
+      "classifier": {
+        "dropout_prop": 0.27816613023764886,
+        "hidden_dim1": 620.0
       },
-      "score": 0.57
+      "embedding": {
+        "min_df": 6.0
+      },
+      "score": 0.59
     },
     "BOREP": {
-      "parameters": {
+      "classifier": {
         "dropout_prop": 0.636458250888132,
         "hidden_dim1": 270.0
       },
       "score": 0.766
     },
     "LASER": {
-      "parameters": {
+      "classifier": {
         "dropout_prop": 0.6319743360998809,
         "hidden_dim1": 120.0
       },
@@ -154,49 +163,52 @@
   },
   "Eduskunta-VKK": {
     "Pooled word2vec": {
-      "parameters": {
+      "classifier": {
         "dropout_prop": 0.4231989469720127,
         "hidden_dim1": 300.0
       },
       "score": 0.5790313996806812
     },
     "Pooled FastText": {
-      "parameters": {
+      "classifier": {
         "dropout_prop": 0.21243542573842944,
         "hidden_dim1": 160.0
       },
       "score": 0.5731772219265566
     },
     "BERT multilingual": {
-      "parameters": {
+      "classifier": {
         "dropout_prop": 0.2123644838395093,
         "hidden_dim1": 50.0
       },
       "score": 0.3772298006295908
     },
     "TF-IDF": {
-      "parameters": {
-        "dropout_prop": 0.6953968172773005,
-        "hidden_dim1": 70.0
+      "classifier": {
+        "dropout_prop": 0.7135664433468158,
+        "hidden_dim1": 170.0
       },
-      "score": 0.593389296956978
+      "embedding": {
+        "min_df": 2.0
+      },
+      "score": 0.5836135728313082
     },
     "SIF": {
-      "parameters": {
+      "classifier": {
         "dropout_prop": 0.34138896991597667,
         "hidden_dim1": 100.0
       },
       "score": 0.5838211814795103
     },
     "BOREP": {
-      "parameters": {
+      "classifier": {
         "dropout_prop": 0.6829139939101502,
         "hidden_dim1": 300.0
       },
       "score": 0.5790313996806812
     },
     "LASER": {
-      "parameters": {
+      "classifier": {
         "dropout_prop": 0.21144443264074303,
         "hidden_dim1": 240.0
       },

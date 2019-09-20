@@ -19,10 +19,15 @@ class Hyperparameters:
     def set_logreg(self):
         self.hyperparameters['logreg'] = True
 
-    def get(self, task_name, model_name):
+    def classifier_parameters(self, task_name, model_name):
         return (self.hyperparameters.get(task_name, {})
                 .get(model_name, {})
-                .get('parameters', {}))
+                .get('classifier', {}))
+
+    def embedding_parameters(self, task_name, model_name):
+        return (self.hyperparameters.get(task_name, {})
+                .get(model_name, {})
+                .get('embedding', {}))
 
 
 def main():
@@ -79,11 +84,14 @@ def evaluate_models(models, tasks, hyperparameters):
             print(f'*** Task: {task.name}, model: {model.name} ***')
             print()
 
-            hyp = hyperparameters.get(task.name, model.name)
-            print(json.dumps(hyp))
-
-            embedding_params, classifier_params = \
-                split_embedding_and_classifier_params(hyp)
+            classifier_params = (hyperparameters
+                                 .classifier_parameters(task.name, model.name))
+            embedding_params = (hyperparameters
+                                .embedding_parameters(task.name, model.name))
+            print(json.dumps({
+                "classifier": classifier_params,
+                "embedding": embedding_params
+            }))
 
             if embedding_params:
                 model = model_builder(**embedding_params)
@@ -100,20 +108,6 @@ def evaluate_models(models, tasks, hyperparameters):
                 })
 
     return pd.DataFrame(res)
-
-
-def split_embedding_and_classifier_params(params):
-    embedding_params = {}
-    classifier_params = {}
-
-    for k, v in params.items():
-        if k.startswith('embedding_'):
-            embedding_key = k[len('embedding_'):]
-            embedding_params[embedding_key] = v
-        else:
-            classifier_params[k] = v
-
-    return (embedding_params, classifier_params)
 
 
 def save_scores(scores, resultdir):
