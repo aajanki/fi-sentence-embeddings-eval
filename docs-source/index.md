@@ -4,7 +4,7 @@ author:
 - Antti Ajanki:
   name: Antti Ajanki
   email: antti.ajanki@iki.fi
-date: 29.8.2019
+date: 21.9.2019
 section:
 - title: Results
   href: index.html
@@ -29,13 +29,16 @@ documents, average pooled or frequency weighted word embeddings tend
 to perform better than BERT and other advanced contextual sentence
 representations.
 
-**Change history**
+#### Change history
 
 22.7.2019 The initial version\
 29.8.2019 Using macro F1 score as the evaluation metric because it
 makes more sense on unbalanced classification. The change makes SIF
 stand out even more clearly. (git commit
-[8eb451f6](https://github.com/aajanki/fi-sentence-embeddings-eval/tree/8eb451f6db888af6c48e931109d6d2ee0cd56ea0))
+[8eb451f6](https://github.com/aajanki/fi-sentence-embeddings-eval/tree/8eb451f6db888af6c48e931109d6d2ee0cd56ea0))\
+21.9.2019 Grid search over the TF-IDF minimum document frequency.
+TF-IDF now beats other methods on one task. (git commit
+[fb5ac7bb](https://github.com/aajanki/fi-sentence-embeddings-eval/tree/fb5ac7bba3da7b18db444d476757cfc2363b344e))
 
 ## Evaluation results
 
@@ -84,9 +87,9 @@ projections (BOREP) would be consistently better than the plain pooled
 word2vec.
 
 These results reinforce the previous findings in the literature that
-in general word embeddings perform better better than older
-bag-of-word models (TF-IDF). The average pooled word2vec beats TF-IDF
-on three tasks out of four.
+in general word embeddings perform better better than simpler
+bag-of-word models (TF-IDF). SIF and the average pooled word2vec beat
+TF-IDF on three tasks out of four.
 
 More advanced models BERT and LASER, which incorporate the sentence
 context, are not much better than SIF and often worse. This is in

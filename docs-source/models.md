@@ -70,11 +70,12 @@ to tell much about the actual content of the sentence. The vectors are
 L2-normalized to reduce the effect of differing sentence lengths.
 
 As a preprocessing, words are converted to their dictionary form
-(lemmatized) and all unigrams and bigrams occurring more than four
-times are selected. Typically (depending on the corpus) this results
-in dimensionality (i.e. the vocabulary size) around 5000. TF-IDF
-vectors are very sparse, because one document usually contains only a
-small subset of all words in the vocabulary.
+(lemmatized). Unigrams and bigrams occurring less than $k$ times are
+filtered out. The cutoff parameter $k$ is optimized on the training
+data. Depending on the corpus this results in dimensionality (i.e. the
+vocabulary size) around 5000. TF-IDF vectors are very sparse, because
+one document usually contains only a small subset of all words in the
+vocabulary.
 
 BoW models treat each word as an equivalent entity. They don't
 consider the semantic meaning of words. For example, a BoW model
@@ -170,17 +171,16 @@ model to consider word's left and right context when making
 predictions.
 
 In the evaluation, I'll use the value of the second-to-last hidden
-layer of a special \[CLS\] token as the final sentence embedding. BERT
-is trained to aggregate information about the whole sequence on the
-layers corresponding to the \[CLS\] token on classification tasks. I
-have selected the second-to-last hidden layer because both the paper
-and my brief preliminary study showed that it gives slightly better
-classification performance than the output layer of the \[CLS\] token.
-BERT also generates output embeddings for each input word, but these
-are not used in the evaluations. In the paraphrase and consecutive
-sentence evaluation tasks that directly compare two sentences, both
-sentences are fed as input separated by a separator token to match how
-BERT was trained.
+layer of the sentence start token as the sentence embedding. The BERT
+model is trained to aggregate information about the whole sequence on
+the output layer of the start token on classification tasks. I have
+selected the second-to-last hidden layer because both the paper and my
+brief preliminary study showed that it gives slightly better
+classification performance than the output layer. BERT also generates
+output embeddings for each input word, but these are not used in the
+evaluations. In the paraphrase and consecutive sentence evaluation
+tasks that directly compare two sentences, both sentences are fed as
+input separated by a separator token to match how BERT was trained.
 
 I'm using the pre-trained multilingual (Bert-base, multilingual cased)
 variant published by the BERT authors. It has been trained on 104
