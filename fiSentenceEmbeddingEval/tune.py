@@ -134,10 +134,8 @@ def tune():
         print('parameters:')
         print(best)
 
-        best_params.setdefault(task.name, {})[embedding_model.name] = {
-            'parameters': best,
-            'score': best_score
-        }
+        best_params.setdefault(task.name, {})[embedding_model.name] = \
+            serialize_results(best, best_score)
 
         with open('results/hyperparameters.json', 'w') as f:
             json.dump(best_params, f, indent=2)
@@ -166,6 +164,20 @@ def split_embedding_and_classifier_params(params):
             classifier_params[k] = v
 
     return (embedding_params, classifier_params)
+
+
+def serialize_results(params, score):
+    embedding_params, classifier_params = \
+        split_embedding_and_classifier_params(params)
+
+    serialized = {
+        'classifier': classifier_params,
+        'score': score
+    }
+    if embedding_params:
+        serialized['embedding'] = embedding_params
+
+    return serialized
 
 
 if __name__ == '__main__':
