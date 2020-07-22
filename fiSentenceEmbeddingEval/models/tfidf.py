@@ -9,6 +9,7 @@ class TfidfVectors(SentenceEmbeddingModel):
         tokenizer = self.build_voikko_tokenizer(voikko)
         self.vectorizer = TfidfVectorizer(lowercase=True,
                                           tokenizer=tokenizer,
+                                          token_pattern=None,
                                           ngram_range=(1, 2),
                                           min_df=min_df,
                                           max_features=25000)

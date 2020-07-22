@@ -9,6 +9,7 @@ from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 from scipy import stats
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score, accuracy_score, classification_report, confusion_matrix
+from sklearn.svm import LinearSVC
 from .preprocess import load_UD, source_type_percentages
 
 
@@ -30,6 +31,24 @@ class BaseTask:
         raise NotImplementedError('prepare_data() must be implemented')
 
     def train_classifier(self, X, y, params):
+        if params.get('logreg', False):
+            clf = LogisticRegression(multi_class='multinomial',
+                                     solver='lbfgs', max_iter=1000)
+        elif params.get('svm', False):
+            clf = LinearSVC(loss='hinge', C=params.get('svm_C', 1.0),
+                            intercept_scaling=5.0, max_iter=100000)
+        else:
+            nnparams = params.copy()
+            for p in ['logreg', 'svm', 'svm_C']:
+                if p in nnparams:
+                    del nnparams[p]
+
+            clf = self.build_nn_classifier(X, y, nnparams)
+
+        clf.fit(X, y)
+        return clf
+
+    def build_nn_classifier(self, X, Y, params):
         return None
 
     def compute_scores(self, clf, X_test, y_test):
@@ -58,24 +77,14 @@ class ClassificationTask(BaseTask):
 
         return X_train, y_train, X_test, y_test
 
-    def train_classifier(self, X, y, params):
-        if params.get('logreg', False):
-            clf = LogisticRegression(multi_class='multinomial',
-                                     solver='lbfgs',
-                                     max_iter=1000)
-        else:
-            nnparams = params.copy()
-            if 'logreg' in nnparams:
-                del nnparams['logreg']
-            clf = KerasClassifier(build_fn=self.nn_classifier_model,
-                                  input_dim=X.shape[1],
-                                  num_classes=len(np.unique(y)),
-                                  epochs=200,
-                                  batch_size=8,
-                                  verbose=1 if self.verbose else 0,
-                                  **nnparams)
-        clf.fit(X, y)
-        return clf
+    def build_nn_classifier(self, X, y, params):
+        return KerasClassifier(build_fn=self.nn_classifier_model,
+                               input_dim=X.shape[1],
+                               num_classes=len(np.unique(y)),
+                               epochs=200,
+                               batch_size=8,
+                               verbose=1 if self.verbose else 0,
+                               **params)
 
     def nn_classifier_model(self, input_dim=300, num_classes=3,
                             hidden_dim1=128, dropout_prop=0.3):
@@ -104,9 +113,9 @@ class ClassificationTask(BaseTask):
         f1_micro = f1_score(y_test, y_pred, average='micro')
         f1_macro = f1_score(y_test, y_pred, average='macro')
         acc = accuracy_score(y_test, y_pred)
-        print(f'macro F1: {f1_macro:.2f}, '
-              f'micro F1: {f1_micro:.2f}, '
-              f'accuracy: {acc:.2f}')
+        print(f'macro F1: {f1_macro:.3f}, '
+              f'micro F1: {f1_micro:.3f}, '
+              f'accuracy: {acc:.3f}')
 
         return {'F1 score': f1_macro, 'F1 micro': f1_micro, 'Accuracy': acc}
 
@@ -206,21 +215,14 @@ class OpusparcusTask(BaseTask):
 
         return X_train, y_train, X_test, y_test
         
-    def train_classifier(self, X, y, params):
-        nnparams = params.copy()
-        if 'logreg' in nnparams:
-            del nnparams['logreg']
-
-        clf = KerasClassifier(self.build_classifier,
-                              input_dim=X.shape[1],
-                              num_classes=y.shape[1],
-                              epochs=200,
-                              batch_size=8,
-                              verbose=1 if self.verbose else 0,
-                              **nnparams)
-        clf.fit(X, y)
-
-        return clf
+    def build_nn_classifier(self, X, y, params):
+        return KerasClassifier(self.build_classifier,
+                               input_dim=X.shape[1],
+                               num_classes=y.shape[1],
+                               epochs=200,
+                               batch_size=8,
+                               verbose=1 if self.verbose else 0,
+                               **params)
 
     def compute_scores(self, clf, X_test, y_test):
         y_proba = clf.predict_proba(X_test)
@@ -332,19 +334,13 @@ class YlilautaConsecutiveSentencesTask(BaseTask):
 
         return X_train, y_train, X_test, y_test
         
-    def train_classifier(self, X, y, params):
-        nnparams = params.copy()
-        if 'logreg' in nnparams:
-            del nnparams['logreg']
-
-        clf = KerasClassifier(self.build_classifier,
-                              input_dim=X.shape[1],
-                              epochs=200,
-                              batch_size=8,
-                              verbose=1 if self.verbose else 0,
-                              **nnparams)
-        clf.fit(X, y)
-        return clf
+    def build_nn_classifier(self, X, y, params):
+        return KerasClassifier(self.build_classifier,
+                               input_dim=X.shape[1],
+                               epochs=200,
+                               batch_size=8,
+                               verbose=1 if self.verbose else 0,
+                               **params)
 
     def build_classifier(self, input_dim, hidden_dim1=64, dropout_prop=0.5):
         model = Sequential()
