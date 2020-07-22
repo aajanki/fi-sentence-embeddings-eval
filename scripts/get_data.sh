@@ -18,9 +18,9 @@ python fiSentenceEmbeddingEval/prepare-ylilauta.py
 
 # Eduskunta: Vastaukset kirjallisiin kysymyksiin
 mkdir -p data/eduskunta-vkk
-wget -P data/eduskunta-vkk https://github.com/aajanki/eduskunta-vkk/raw/1.0/vkk/train.csv.bz2
-wget -P data/eduskunta-vkk https://github.com/aajanki/eduskunta-vkk/raw/1.0/vkk/dev.csv.bz2
-wget -P data/eduskunta-vkk https://github.com/aajanki/eduskunta-vkk/raw/1.0/vkk/test.csv.bz2
+wget -P data/eduskunta-vkk https://github.com/aajanki/eduskunta-vkk/raw/v2/vkk/train.csv.bz2
+wget -P data/eduskunta-vkk https://github.com/aajanki/eduskunta-vkk/raw/v2/vkk/dev.csv.bz2
+wget -P data/eduskunta-vkk https://github.com/aajanki/eduskunta-vkk/raw/v2/vkk/test.csv.bz2
 
 
 ### PRE-TRAINED MODELS ###
