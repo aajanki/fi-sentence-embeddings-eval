@@ -2,10 +2,10 @@ import os.path
 import time
 import numpy as np
 import pandas as pd
-from keras import regularizers
-from keras.layers import Dense, Dropout
-from keras.models import Sequential
-from keras.wrappers.scikit_learn import KerasClassifier
+from tensorflow.keras import regularizers
+from tensorflow.keras.layers import Dense, Dropout
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 from scipy import stats
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import f1_score, accuracy_score, classification_report, confusion_matrix

@@ -44,7 +44,7 @@ def main():
                                       use_dev_set=args.dev_set,
                                       verbose=args.verbose),
         OpusparcusTask('Opusparcus', 'data/opusparcus/opusparcus_v1',
-                      use_dev_set=args.dev_set, verbose=args.verbose),
+                       use_dev_set=args.dev_set, verbose=args.verbose),
         YlilautaConsecutiveSentencesTask('Ylilauta', 'data/ylilauta',
                                          use_dev_set=args.dev_set,
                                          verbose=args.verbose),
@@ -59,7 +59,7 @@ def main():
         model_fasttext(),
         model_sif(),
         model_borep(),
-        model_bert(),
+        model_finbert(),
         model_laser(os.environ['LASER'], args.verbose),
     ]
 
@@ -146,11 +146,11 @@ def model_fasttext():
     return inner
 
 
-def model_bert():
-    def inner():
-        return Bert(
-            'BERT multilingual',
-            'pretrained/bert/multi_cased_L-12_H-768_A-12', [-3])
+def model_finbert():
+    def inner(layers=None):
+        if layers is None:
+            layers = [-1]
+        return Bert('FinBERT', 'TurkuNLP/bert-base-finnish-cased-v1', layers)
     return inner
 
 

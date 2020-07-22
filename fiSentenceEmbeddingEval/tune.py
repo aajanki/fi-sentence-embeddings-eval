@@ -2,7 +2,7 @@ import itertools
 import json
 import os
 import os.path
-from hyperopt import fmin, tpe, Trials, hp
+from hyperopt import fmin, tpe, Trials, hp, space_eval
 from voikko import libvoikko
 from .models import *
 from .tasks import *
@@ -35,10 +35,10 @@ def tune():
             'Pooled FastText',
             'pretrained/fasttext-fi/cc.fi.300.bin')
 
-    def model_bert():
+    def model_finbert(layers):
         return Bert(
-            'BERT multilingual',
-            'pretrained/bert/multi_cased_L-12_H-768_A-12', [-3])
+            'FinBERT',
+            'TurkuNLP/bert-base-finnish-cased-v1', layers)
 
     def model_tfidf(min_df):
         return TfidfVectors('TF-IDF', voikko, int(min_df))
@@ -67,9 +67,11 @@ def tune():
             'hidden_dim1': hp.quniform('hidden_dim1', 10, 300, 10),
             'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
         }),
-        evaluations_for_model(model_bert, tasks, {
+        evaluations_for_model(model_finbert, tasks, {
             'hidden_dim1': hp.quniform('hidden_dim1', 30, 768, 10),
             'dropout_prop': hp.uniform('dropout_prop', 0.2, 0.8),
+            'embedding_layers': hp.choice('embedding_layers',
+                [[-1], [-2], [-3], [-4], [-1, -2, -3, -4]]),
         }),
         evaluations_for_model(model_tfidf, tasks, {
             'hidden_dim1': hp.quniform('hidden_dim1', 30, 1000, 10),
@@ -124,11 +126,12 @@ def tune():
             return -task.compute_optimization_score(clf, X_test, y_test)
 
         trials = Trials()
-        best = fmin(fn=objective,
+        fmin_res = fmin(fn=objective,
                     space=kv['space'],
                     algo=tpe.suggest,
-                    max_evals=40,
+                    max_evals=50,
                     trials=trials)
+        best = space_eval(kv['space'], fmin_res)
         best_score = -np.min(trials.losses())
         print(f'best score for {embedding_model.name} in task {task.name}: {best_score}')
         print('parameters:')

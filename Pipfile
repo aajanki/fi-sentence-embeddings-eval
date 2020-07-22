@@ -5,15 +5,13 @@ name = "pypi"
 
 [packages]
 pandas = "*"
-scikit-learn = "==0.20.*"
+scikit-learn = "==0.23.*"
 voikko = "*"
 numpy = "*"
+transformers = "*"
+torch = "*"
+tensorflow = ">=2.2.0"
 gensim = "==3.8.*"
-bert-tensorflow = "*"
-tensorflow = "==1.14.*"
-keras = "*"
-matplotlib = "*"
-seaborn = "*"
 hyperopt = "*"
 transliterate = "*"
 
@@ -22,7 +20,4 @@ matplotlib = "*"
 seaborn = "*"
 
 [requires]
-python_version = "3.7"
-
-[packages.b11d91c]
-file = "https://download.pytorch.org/whl/cpu/torch-1.0.1.post2-cp37-cp37m-linux_x86_64.whl"
+python_version = "3.8"

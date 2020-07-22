@@ -14,12 +14,17 @@
       },
       "score": 0.721102863202545
     },
-    "BERT multilingual": {
+    "FinBERT": {
       "classifier": {
-        "dropout_prop": 0.6338108690366673,
-        "hidden_dim1": 490.0
+        "dropout_prop": 0.47696049251815525,
+        "hidden_dim1": 120.0
       },
-      "score": 0.633085896076352
+      "score": 0.7831758311860884,
+      "embedding": {
+        "layers": [
+          -3
+        ]
+      }
     },
     "TF-IDF": {
       "classifier": {
@@ -68,12 +73,20 @@
       },
       "score": 0.5202073259377935
     },
-    "BERT multilingual": {
+    "FinBERT": {
       "classifier": {
-        "dropout_prop": 0.7916468137781945,
-        "hidden_dim1": 50.0
+        "dropout_prop": 0.7960154829015506,
+        "hidden_dim1": 700.0
       },
-      "score": 0.5613646555284336
+      "score": 0.6040331316224778,
+      "embedding": {
+        "layers": [
+          -1,
+          -2,
+          -3,
+          -4
+        ]
+      }
     },
     "TF-IDF": {
       "classifier": {
@@ -122,12 +135,17 @@
       },
       "score": 0.706
     },
-    "BERT multilingual": {
+    "FinBERT": {
       "classifier": {
-        "dropout_prop": 0.7951897188641843,
-        "hidden_dim1": 340.0
+        "dropout_prop": 0.2506427543356566,
+        "hidden_dim1": 720.0
       },
-      "score": 0.738
+      "score": 0.908,
+      "embedding": {
+        "layers": [
+          -3
+        ]
+      }
     },
     "SIF": {
       "classifier": {
@@ -176,12 +194,17 @@
       },
       "score": 0.5731772219265566
     },
-    "BERT multilingual": {
+    "FinBERT": {
       "classifier": {
-        "dropout_prop": 0.2123644838395093,
-        "hidden_dim1": 50.0
+        "dropout_prop": 0.3894361076183901,
+        "hidden_dim1": 480.0
       },
-      "score": 0.3772298006295908
+      "score": 0.6071908807190254,
+      "embedding": {
+        "layers": [
+          -1
+        ]
+      }
     },
     "TF-IDF": {
       "classifier": {
