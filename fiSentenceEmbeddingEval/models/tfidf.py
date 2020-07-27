@@ -24,7 +24,7 @@ class TfidfVectors(SentenceEmbeddingModel):
         ])
 
     def transform(self, sentences):
-        return self.vectorizer.transform(sentences)
+        return self.vectorizer.transform(sentences).todense()
 
     def build_voikko_tokenizer(self, voikko):
         split_whitespace_re = re.compile(r"(?u)\b\w\w+\b")

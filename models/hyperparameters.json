@@ -182,24 +182,24 @@
   "Eduskunta-VKK": {
     "Pooled word2vec": {
       "classifier": {
-        "dropout_prop": 0.4231989469720127,
-        "hidden_dim1": 300.0
+        "dropout_prop": 0.24220427967510982,
+        "hidden_dim1": 150.0
       },
-      "score": 0.5790313996806812
+      "score": 0.518180003602396
     },
     "Pooled FastText": {
       "classifier": {
-        "dropout_prop": 0.21243542573842944,
-        "hidden_dim1": 160.0
+        "dropout_prop": 0.20340540521785583,
+        "hidden_dim1": 230.0
       },
-      "score": 0.5731772219265566
+      "score": 0.523731899867808
     },
     "FinBERT": {
       "classifier": {
-        "dropout_prop": 0.3894361076183901,
-        "hidden_dim1": 480.0
+        "dropout_prop": 0.4524836498785135,
+        "hidden_dim1": 500.0
       },
-      "score": 0.6071908807190254,
+      "score": 0.6099822795109565,
       "embedding": {
         "layers": [
           -1
@@ -208,34 +208,34 @@
     },
     "TF-IDF": {
       "classifier": {
-        "dropout_prop": 0.7135664433468158,
-        "hidden_dim1": 170.0
+        "dropout_prop": 0.7135109084676463,
+        "hidden_dim1": 420.0
       },
+      "score": 0.5842720677396509,
       "embedding": {
         "min_df": 2.0
-      },
-      "score": 0.5836135728313082
+      }
     },
     "SIF": {
       "classifier": {
-        "dropout_prop": 0.34138896991597667,
-        "hidden_dim1": 100.0
+        "dropout_prop": 0.2665451563329032,
+        "hidden_dim1": 210.0
       },
-      "score": 0.5838211814795103
+      "score": 0.5361896682964183
     },
     "BOREP": {
       "classifier": {
-        "dropout_prop": 0.6829139939101502,
-        "hidden_dim1": 300.0
+        "dropout_prop": 0.6319914829705313,
+        "hidden_dim1": 270.0
       },
-      "score": 0.5790313996806812
+      "score": 0.5187799356113122
     },
     "LASER": {
       "classifier": {
-        "dropout_prop": 0.21144443264074303,
-        "hidden_dim1": 240.0
+        "dropout_prop": 0.24755455949772595,
+        "hidden_dim1": 250.0
       },
-      "score": 0.5816923895689197
+      "score": 0.5544457615677284
     }
   }
 }
