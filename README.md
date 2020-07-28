@@ -30,7 +30,7 @@ Models included in the comparison:
 * TF-IDF
 * Average-pooled [word2vec](https://en.wikipedia.org/wiki/Word2vec) trained on the [Finnish Internet Parsebank](http://bionlp.utu.fi/finnish-internet-parsebank.html)
 * Average-pooled multilingual [FastText](https://github.com/facebookresearch/fastText/blob/master/docs/crawl-vectors.md)
-* Multilingual [BERT](https://github.com/google-research/bert/blob/master/multilingual.md)
+* [FinBERT](http://turkunlp.org/FinBERT/)
 * [Smoothed Inverse Frequency weighting](https://openreview.net/forum?id=SyK00v5xx) (SIF) of word embeddings
 * [Bag of embedding projections](https://openreview.net/forum?id=BkgPajAcY7) (BOREP)
 * [LASER - Language-Agnostic SEntence Representations](https://github.com/facebookresearch/LASER)

@@ -22,8 +22,8 @@ parliament.
 The task is straight-forward sentence classification. Individual
 sentences are extracted from the answer documents and the correct
 class is the name of the ministry which answered the question. There
-are 15 classes (ministries) and 49693 sentences as training data and
-2000 sentences as test data. The evaluation measure is the macro F1
+are 15 classes (ministries) and 49106 sentences as training data and
+3000 sentences as test data. The evaluation measure is the macro F1
 score.
 
 Example sentences and classes:

@@ -162,29 +162,25 @@ such models.
 
 ### Contextual full sentence embeddings
 
-**BERT** (Bidirectional Encoder Representations from Transformers)
-[@devlin2018] processes a full sentence to generate a sentence
-embeddings. It uses self-attention to decide the relevant context for
-each word in the sentence. Another major technical contribution in the
-paper was a bi-directional transformer architecture, which allows the
-model to consider word's left and right context when making
-predictions.
+**FinBERT** [@virtanen2019] is the influential BERT model
+(Bidirectional Encoder Representations from Transformers)
+[@devlin2018] trained from scratch on Finnish texts. The BERT model
+consists of encoder transformer layers which are able to take the
+bi-directional context of each word into account. The model employs
+self-attention to focus on relevant context.
 
-In the evaluation, I'll use the value of the second-to-last hidden
-layer of the sentence start token as the sentence embedding. The BERT
-model is trained to aggregate information about the whole sequence on
-the output layer of the start token on classification tasks. I have
-selected the second-to-last hidden layer because both the paper and my
-brief preliminary study showed that it gives slightly better
-classification performance than the output layer. BERT also generates
-output embeddings for each input word, but these are not used in the
-evaluations. In the paraphrase and consecutive sentence evaluation
-tasks that directly compare two sentences, both sentences are fed as
-input separated by a separator token to match how BERT was trained.
+In the evaluations, the sentence embedding is the output vector from
+one of the last layers or the average of the last four layers. The
+optimal embedding layer is chosen separately for each task together
+with other hyperparameters. BERT also generates output embeddings for
+each input word, but these are not used in the evaluations, just the
+output layer of the special classification token. In the paraphrase
+and consecutive sentence evaluation tasks, which compare two sentences
+directly, both sentences are fed as input separated by a separator
+token to match how BERT was trained.
 
-I'm using the pre-trained multilingual (Bert-base, multilingual cased)
-variant published by the BERT authors. It has been trained on 104
-languages, including Finnish. The embedding dimensionality is 768.
+I'm using the Huggingface implementation of the pre-trained FinBERT
+(cased) model. The embedding dimensionality is 768.
 
 **LASER**. As the second contextual sentence embedding method, I'll
 evaluate LASER (Language-Agnostic SEntence Representations) by
@@ -230,7 +226,7 @@ two sentences be called $u$ and $v$. The feature vector for the pair
 is then generated as a concatenation of the element-wise product $u
 \odot v$ and the element-wise absolute distance $|u-v|$. The
 concatenated feature vector is then used as the input for the
-classification part, like above. The BERT model is an exception. It
+classification part, like above. The FinBERT model is an exception. It
 has an integrated way of handling sentence pair tasks (see above).
 
 The final evaluation [results](index.html) are computed on a test
